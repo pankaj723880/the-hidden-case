@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import dns from "node:dns";
 import { env } from "../config/env.js";
 
 export async function connectToMongo() {
@@ -7,6 +8,10 @@ export async function connectToMongo() {
     // eslint-disable-next-line no-console
     console.warn("MONGODB_URI missing; skipping Mongo connection");
     return;
+  }
+
+  if (env.MONGODB_URI.startsWith("mongodb+srv://")) {
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
   }
 
   await mongoose.connect(env.MONGODB_URI);
