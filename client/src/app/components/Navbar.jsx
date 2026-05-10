@@ -18,11 +18,17 @@ export function Navbar() {
   const linkClass = (href) => {
     const isActive = pathname === href || pathname.startsWith(`${href}/`);
     return [
-      "px-2 py-2 text-[0.9rem] font-medium tracking-[0.05rem] transition",
+      "nav-compact-action flex h-9 min-w-9 items-center justify-center px-1 py-2 text-[0.9rem] font-medium tracking-[0.05rem] transition sm:h-10 sm:min-w-10 sm:px-2",
       "font-[var(--font-garamond)] underline-offset-4 hover:underline",
       isActive ? "text-[var(--accent)]" : "text-[var(--text2)]",
     ].join(" ");
   };
+  const navLabel = (icon, label) => (
+    <>
+      <span className="text-[1.05rem] sm:hidden" aria-hidden="true">{icon}</span>
+      <span className="sr-only sm:not-sr-only sm:inline">{label}</span>
+    </>
+  );
   const drawerLinkClass = (href) => {
     const isActive = pathname === href || pathname.startsWith(`${href}/`);
     return [
@@ -40,11 +46,11 @@ export function Navbar() {
         boxShadow: "0 1px 8px rgba(44, 36, 22, 0.08)",
       }}
     >
-      <div className="mx-auto flex min-h-16 w-full max-w-[1280px] flex-wrap items-center gap-3 px-3 py-2 sm:px-4 lg:flex-nowrap">
+      <div className="mx-auto grid min-h-16 w-full max-w-[1280px] grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-3 py-2 sm:px-4 lg:flex lg:flex-nowrap lg:gap-3">
         <button
           type="button"
           onClick={() => setIsMenuOpen(true)}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[3px] border text-xl transition hover:bg-[var(--bg3)]"
+          className="nav-compact-action col-start-1 row-start-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-[3px] border text-lg transition hover:bg-[var(--bg3)] sm:h-10 sm:w-10 sm:text-xl lg:order-1"
           style={{ borderColor: "var(--border)", color: "var(--text2)" }}
           aria-label="Open menu"
         >
@@ -53,7 +59,7 @@ export function Navbar() {
 
         <AppLink
           href="/"
-          className="flex min-w-0 shrink-0 items-center gap-3 hover:no-underline lg:max-w-[18rem]"
+          className="col-span-2 row-start-1 flex w-full min-w-0 shrink-0 items-center justify-center gap-3 hover:no-underline lg:order-2 lg:w-auto lg:justify-start lg:max-w-[18rem]"
         >
           <span
             aria-hidden="true"
@@ -91,38 +97,43 @@ export function Navbar() {
           </span>
         </AppLink>
 
-        <nav className="navbar-links flex min-w-0 flex-1 flex-wrap items-center justify-end gap-x-1 gap-y-2 sm:gap-x-2">
+        <nav className="navbar-links col-start-2 row-start-2 flex w-full min-w-0 flex-nowrap items-center justify-end gap-1 sm:gap-2 lg:order-3 lg:flex-1">
           <AppLink
             href="/browse"
+            aria-label="Browse"
             className={linkClass("/browse")}
           >
-            Browse
+            {navLabel("⌕", "Browse")}
           </AppLink>
           <AppLink
             href="/challenges"
+            aria-label="Challenges"
             className={linkClass("/challenges")}
           >
-            Challenges
+            {navLabel("✦", "Challenges")}
           </AppLink>
           <AppLink
             href="/leaderboard"
+            aria-label="Leaderboard"
             className={linkClass("/leaderboard")}
           >
-            Leaderboard
+            {navLabel("♕", "Leaderboard")}
           </AppLink>
           {isAdmin ? (
             <AppLink
               href="/admin"
+              aria-label="Admin"
               className={linkClass("/admin")}
             >
-              Admin
+              {navLabel("⚙", "Admin")}
             </AppLink>
           ) : (
             <AppLink
               href="/write"
+              aria-label="Write"
               className={linkClass("/write")}
             >
-              Write
+              {navLabel("✎", "Write")}
             </AppLink>
           )}
           {isAuthenticated ? (
@@ -160,25 +171,31 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="secondary-btn shrink-0 px-4 py-1.5 text-sm"
+                className="nav-compact-action secondary-btn h-9 shrink-0 px-2 py-1.5 text-sm sm:h-10 sm:px-4"
                 style={{ color: "var(--text2)" }}
+                aria-label="Logout"
               >
-                Logout
+                <span className="sm:hidden" aria-hidden="true">↪</span>
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </>
           ) : (
             <>
               <AppLink
                 href="/login"
-                className="secondary-btn shrink-0 px-[18px] py-1.5 text-sm hover:no-underline"
+                className="nav-compact-action secondary-btn flex h-9 shrink-0 items-center justify-center px-2 py-1.5 text-sm hover:no-underline sm:h-10 sm:px-[18px]"
+                aria-label="Login"
               >
-                Login
+                <span className="sm:hidden" aria-hidden="true">↪</span>
+                <span className="hidden sm:inline">Login</span>
               </AppLink>
               <AppLink
                 href="/register"
-                className="primary-btn shrink-0 px-[18px] py-1.5 text-sm hover:no-underline"
+                className="nav-compact-action primary-btn flex h-9 shrink-0 items-center justify-center px-2 py-1.5 text-sm hover:no-underline sm:h-10 sm:px-[18px]"
+                aria-label="Sign Up"
               >
-                Sign Up
+                <span className="sm:hidden" aria-hidden="true">＋</span>
+                <span className="hidden sm:inline">Sign Up</span>
               </AppLink>
             </>
           )}

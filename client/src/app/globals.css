@@ -485,6 +485,26 @@ body.focus-mode .write-body-field textarea {
 }
 
 @media (max-width: 480px) {
+  .navbar-links {
+    gap: 0.25rem;
+  }
+
+  .navbar-links .nav-compact-action,
+  .navbar-links > a,
+  .navbar-links > button,
+  .navbar-links > div > button {
+    width: 2rem;
+    min-width: 2rem;
+    height: 2rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .navbar-links img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
   .hero {
     padding: 4rem 1.25rem 3rem;
   }
