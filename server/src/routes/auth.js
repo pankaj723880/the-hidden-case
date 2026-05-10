@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { authLimit } from "../middleware/rateLimit.js";
 import {
   login,
   loginTwoFactor,
@@ -15,8 +14,6 @@ import {
 import { requireAuth } from "../middleware/auth.js";
 
 export const authRouter = Router();
-
-authRouter.use(authLimit);
 
 authRouter.post("/register", register);
 authRouter.post("/login", login);

@@ -63,12 +63,6 @@ export const generalLimit = createRateLimit({
   message: "Too many requests. Please slow down.",
 });
 
-export const authLimit = createRateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: "Too many auth attempts. Try again in 15 minutes.",
-});
-
 export const writeLimit = createRateLimit({
   windowMs: 60 * 1000,
   max: 10,
