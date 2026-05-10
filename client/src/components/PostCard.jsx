@@ -4,6 +4,7 @@ import BookmarkButton from "./BookmarkButton";
 import MoodBadge from "./MoodBadge";
 import { getLanguage } from "../lib/languages";
 import { formatDate, formatNumber, formatReadTime } from "../lib/format";
+import { API_URL } from "../lib/api";
 
 function hasBookmarked(bookmarks, postId) {
   return (bookmarks ?? []).some((id) => String(id?._id ?? id) === String(postId));
@@ -26,7 +27,7 @@ export default function PostCard({ post, onLike, onShare, sharedPostId }) {
   const trackTitleClick = () => {
     if (!post._titleVariant) return;
     const payload = JSON.stringify({ variant: post._titleVariant });
-    const url = `${process.env.REACT_APP_API_URL ?? "http://localhost:5001"}/api/posts/${post._id}/title-click`;
+    const url = `${API_URL}/api/posts/${post._id}/title-click`;
     if (navigator.sendBeacon) {
       navigator.sendBeacon(url, new window.Blob([payload], { type: "application/json" }));
     } else {

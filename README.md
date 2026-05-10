@@ -208,10 +208,11 @@ EMAIL_FROM=The Hidden Case <noreply@hiddencase.com>
 Client environment variable:
 
 ```env
-REACT_APP_API_URL=http://localhost:5001
+REACT_APP_API_URL=https://the-hidden-case.onrender.com
+REACT_APP_SOCKET_URL=https://the-hidden-case.onrender.com
 ```
 
-If `REACT_APP_API_URL` is not set, the client falls back to `http://localhost:5001`.
+If `REACT_APP_API_URL` or `REACT_APP_SOCKET_URL` is not set, the client falls back to the deployed Render backend.
 
 ## Installation
 

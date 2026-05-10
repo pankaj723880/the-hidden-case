@@ -7,8 +7,10 @@ export function setApiAccessToken(token) {
   accessToken = token;
 }
 
+export const API_URL = process.env.REACT_APP_API_URL ?? "https://the-hidden-case.onrender.com";
+
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL ?? "http://localhost:5001",
+  baseURL: API_URL,
   withCredentials: true,
 });
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { api } from "../../../lib/api";
+import { API_URL, api } from "../../../lib/api";
 import { useAuth } from "../../../context/AuthContext";
 import { AppLink } from "../../../lib/navigation";
 import ReadingProgress from "../../../components/ReadingProgress";
@@ -256,7 +256,7 @@ export default function PostPage({ postId }) {
 
     const sendDepth = (depth) => {
       const payload = JSON.stringify({ depth, sessionId });
-      const url = `${process.env.REACT_APP_API_URL ?? "http://localhost:5001"}/api/posts/${postId}/read-depth`;
+      const url = `${API_URL}/api/posts/${postId}/read-depth`;
       if (navigator.sendBeacon) {
         navigator.sendBeacon(url, new window.Blob([payload], { type: "application/json" }));
       } else {
