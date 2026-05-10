@@ -177,7 +177,7 @@ JWT_SECRET=your_super_secret_key_change_in_production
 JWT_REFRESH_SECRET=your_refresh_secret_key_change_in_production
 
 # Client URL for CORS
-CLIENT_URL=http://localhost:3000
+CLIENT_URL=https://monumental-zuccutto-397bf4.netlify.app
 
 # Cloudinary, optional
 CLOUDINARY_CLOUD_NAME=your_cloud_name
