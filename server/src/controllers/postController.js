@@ -1211,10 +1211,9 @@ export async function translatePost(req, res) {
     const translatedContent = await generateText(prompt, 1200);
     return res.json({ translatedContent, targetLanguage });
   } catch (err) {
+    console.error("Translation failed:", err?.message || err);
     return res.status(503).json({
-      error:
-        err?.message ||
-        "Translation is temporarily unavailable. Please try again.",
+      error: "Translation is temporarily unavailable. Please try again.",
     });
   }
 }
