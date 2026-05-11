@@ -366,7 +366,10 @@ export default function PostPage({ postId }) {
       setTranslatedContent(res.data.translatedContent ?? "");
       setShowingTranslation(true);
     } catch (err) {
-      toast.error(err?.response?.data?.error || err?.message || "Failed to translate");
+      toast.error(
+        err?.response?.data?.error ||
+          "Translation is temporarily unavailable. Please try again.",
+      );
     } finally {
       setIsTranslating(false);
     }

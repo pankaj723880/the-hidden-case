@@ -1198,17 +1198,25 @@ export async function trackTitleClick(req, res) {
 }
 
 export async function translatePost(req, res) {
-  const targetLanguage = cleanLanguage(req.body.targetLanguage);
-  const post = await PostModel.findById(req.params.id).select("title content language");
-  if (!post) return res.status(404).json({ error: "Post not found" });
-  if ((post.language ?? "en") === targetLanguage) {
-    return res.json({ translatedContent: post.content.replace(/<[^>]+>/g, ""), targetLanguage });
-  }
+  try {
+    const targetLanguage = cleanLanguage(req.body.targetLanguage);
+    const post = await PostModel.findById(req.params.id).select("title content language");
+    if (!post) return res.status(404).json({ error: "Post not found" });
+    if ((post.language ?? "en") === targetLanguage) {
+      return res.json({ translatedContent: post.content.replace(/<[^>]+>/g, ""), targetLanguage });
+    }
 
-  const plainText = post.content.replace(/<[^>]+>/g, "").slice(0, 4000);
-  const prompt = `Translate the following literary text from ${post.language ?? "en"} to ${targetLanguage}. Preserve the literary style, tone, and formatting. Maintain paragraph breaks. Return ONLY the translated text. No explanation. No preamble.\n\nText: ${plainText}`;
-  const translatedContent = await generateText(prompt, 2000);
-  return res.json({ translatedContent, targetLanguage });
+    const plainText = post.content.replace(/<[^>]+>/g, "").slice(0, 3000);
+    const prompt = `Translate the following literary text from ${post.language ?? "en"} to ${targetLanguage}. Preserve the literary style, tone, and paragraph breaks. Return ONLY the translated text. No explanation. No preamble.\n\nText: ${plainText}`;
+    const translatedContent = await generateText(prompt, 1200);
+    return res.json({ translatedContent, targetLanguage });
+  } catch (err) {
+    return res.status(503).json({
+      error:
+        err?.message ||
+        "Translation is temporarily unavailable. Please try again.",
+    });
+  }
 }
 
 // Admin helpers (not wired yet)

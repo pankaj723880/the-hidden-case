@@ -116,6 +116,114 @@ function MetricGraph({ metric, history, maxValue }) {
   );
 }
 
+function stripHtml(value) {
+  return String(value ?? "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function isApprovedStatus(status) {
+  return ["approved", "published", "scheduled"].includes(status);
+}
+
+function AdminPostCard({
+  post,
+  formatDateTime,
+  onOpen,
+  onApprove,
+  onReject,
+  onToggleFeature,
+}) {
+  const approved = isApprovedStatus(post.status);
+  const rejected = post.status === "rejected";
+  const pending = post.status === "pending";
+
+  return (
+    <article className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <button
+          type="button"
+          onClick={() => onOpen(post)}
+          className="min-w-0 flex-1 text-left"
+        >
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#8f5f35]">
+              {post.type}
+            </span>
+            <span className="inline-flex rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold capitalize text-[#8f5f35]">
+              {post.status}
+            </span>
+            {post.featured ? (
+              <span className="inline-flex rounded-full bg-[#f59e0b]/15 px-3 py-1 text-xs font-black text-[#b45309]">
+                Featured
+              </span>
+            ) : null}
+          </div>
+          <h3 className="serif-title mt-3 text-xl font-bold text-[#25211d]">
+            {post.title}
+          </h3>
+          <p className="mt-2 text-sm font-semibold text-[#8b7f72]">
+            Author: {post.author?.name ?? "Unknown"}
+          </p>
+          <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#6d6155]">
+            {stripHtml(post.content)}
+          </p>
+          {post.scheduledAt ? (
+            <p className="mt-2 text-xs font-bold text-[var(--accent)]">
+              Scheduled: {formatDateTime(post.scheduledAt)}
+            </p>
+          ) : null}
+          {post.plagiarismCheck?.checkedAt ? (
+            <p className="mt-2 text-xs font-bold" style={{
+              color: post.plagiarismCheck.isFlagged ? "var(--red)" : "var(--green)",
+            }}>
+              Plagiarism: {post.plagiarismCheck.similarityScore ?? 0}%
+            </p>
+          ) : null}
+        </button>
+
+        <div className="flex shrink-0 flex-wrap gap-2 sm:w-40 sm:flex-col">
+          <button
+            type="button"
+            onClick={() => onOpen(post)}
+            className="secondary-btn px-4 py-2 text-sm"
+          >
+            Review
+          </button>
+          {pending || rejected ? (
+            <button
+              type="button"
+              onClick={() => onApprove(post)}
+              className="primary-btn px-4 py-2 text-sm"
+            >
+              {rejected ? "Approve again" : "Approve"}
+            </button>
+          ) : null}
+          {pending || approved ? (
+            <button
+              type="button"
+              onClick={() => onReject(post)}
+              className="secondary-btn px-4 py-2 text-sm"
+              style={{ color: "var(--red)" }}
+            >
+              Reject
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => onToggleFeature(post._id)}
+            className="rounded-md border px-4 py-2 text-sm font-bold transition hover:bg-[#f59e0b]/10"
+            style={{
+              borderColor: "#f59e0b",
+              color: post.featured ? "#92400e" : "#b45309",
+            }}
+          >
+            {post.featured ? "Unfeature" : "Feature"}
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function AdminPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [posts, setPosts] = useState([]);
@@ -443,6 +551,50 @@ export default function AdminPage() {
 
     return { status: "approved", scheduledAt: null, label: "Approve and publish" };
   };
+  const approvePost = (post, comment = "") => {
+    const action = getApprovalAction(post);
+    return setStatus(post._id, action.status, action.scheduledAt, comment);
+  };
+  const rejectPost = (post, comment = "") =>
+    setStatus(post._id, "rejected", null, comment);
+  const reviewGroups = [
+    {
+      key: "pending-stories",
+      title: "Pending Stories",
+      description: "Stories waiting for an editorial decision.",
+      posts: posts.filter((post) => post.type === "story" && post.status === "pending"),
+    },
+    {
+      key: "pending-blogs",
+      title: "Pending Blogs",
+      description: "Blogs waiting for an editorial decision.",
+      posts: posts.filter((post) => post.type === "blog" && post.status === "pending"),
+    },
+    {
+      key: "approved-stories",
+      title: "Approved Stories",
+      description: "Approved, scheduled, and published stories. Approve is disabled here.",
+      posts: posts.filter((post) => post.type === "story" && isApprovedStatus(post.status)),
+    },
+    {
+      key: "approved-blogs",
+      title: "Approved Blogs",
+      description: "Approved, scheduled, and published blogs. Approve is disabled here.",
+      posts: posts.filter((post) => post.type === "blog" && isApprovedStatus(post.status)),
+    },
+    {
+      key: "rejected-stories",
+      title: "Rejected Stories",
+      description: "Stories rejected by the editorial desk.",
+      posts: posts.filter((post) => post.type === "story" && post.status === "rejected"),
+    },
+    {
+      key: "rejected-blogs",
+      title: "Rejected Blogs",
+      description: "Blogs rejected by the editorial desk.",
+      posts: posts.filter((post) => post.type === "blog" && post.status === "rejected"),
+    },
+  ];
 
   return (
     <main className="editorial-shell py-12">
@@ -475,83 +627,42 @@ export default function AdminPage() {
               Editor&apos;s Pick: {featuredCount} / 3 slots used
             </p>
           </div>
-          <div className="space-y-4 p-6">
-            {posts.map((post) => (
-              <div
-                key={post._id}
-                className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5"
-              >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <button
-                    type="button"
-                    onClick={() => openPostReview(post)}
-                    className="min-w-0 flex-1 text-left"
-                  >
-                    <span className="rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#8f5f35]">
-                      {post.type}
-                    </span>
-                    <h3 className="serif-title mt-3 text-2xl font-bold text-[#25211d]">
-                      {post.title}
+          <div className="space-y-6 p-6">
+            {reviewGroups.map((group) => (
+              <section key={group.key} className="rounded-lg border border-[#ded2c1] bg-[#f5f0e8]/65 p-4">
+                <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h3 className="serif-title text-2xl font-bold text-[#25211d]">
+                      {group.title}
                     </h3>
-                    <p className="mt-2 line-clamp-2 leading-7 text-[#6d6155]">
-                      {post.content}
+                    <p className="mt-1 text-sm text-[#8b7f72]">
+                      {group.description}
                     </p>
-                    <p className="mt-3 text-sm font-semibold text-[#8b7f72]">
-                      By {post.author?.name ?? "Unknown"} · click to review full submission
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="inline-flex rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold capitalize text-[#8f5f35]">
-                        {post.status}
-                      </span>
-                      {post.featured ? (
-                        <span className="inline-flex rounded-full bg-[#f59e0b]/15 px-3 py-1 text-xs font-black text-[#b45309]">
-                          ★ Featured
-                        </span>
-                      ) : null}
-                      {post.scheduledAt ? (
-                        <span className="inline-flex rounded-full bg-[var(--bg3)] px-3 py-1 text-xs font-bold text-[var(--accent)]">
-                          Scheduled: {formatDateTime(post.scheduledAt)}
-                        </span>
-                      ) : null}
-                      {post.plagiarismCheck?.checkedAt ? (
-                        <span
-                          className="inline-flex rounded-full px-3 py-1 text-xs font-bold"
-                          style={{
-                            backgroundColor: post.plagiarismCheck.isFlagged
-                              ? "#f0e8e8"
-                              : "#e8f0e8",
-                            color: post.plagiarismCheck.isFlagged
-                              ? "var(--red)"
-                              : "var(--green)",
-                          }}
-                        >
-                          Plagiarism: {post.plagiarismCheck.similarityScore ?? 0}%
-                        </span>
-                      ) : null}
-                    </div>
-                  </button>
-                  <div className="flex shrink-0 flex-col gap-2 sm:w-36">
-                    <button
-                      type="button"
-                      onClick={() => openPostReview(post)}
-                      className="secondary-btn px-4 py-2 text-center text-sm"
-                    >
-                      Review
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleFeature(post._id)}
-                      className="rounded-md border px-4 py-2 text-sm font-bold transition hover:bg-[#f59e0b]/10"
-                      style={{
-                        borderColor: "#f59e0b",
-                        color: post.featured ? "#92400e" : "#b45309",
-                      }}
-                    >
-                      {post.featured ? "★ Unfeature" : "⭐ Feature"}
-                    </button>
                   </div>
+                  <span className="rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-black text-[#8f5f35]">
+                    {group.posts.length}
+                  </span>
                 </div>
-              </div>
+
+                <div className="space-y-3">
+                  {group.posts.map((post) => (
+                    <AdminPostCard
+                      key={post._id}
+                      post={post}
+                      formatDateTime={formatDateTime}
+                      onOpen={openPostReview}
+                      onApprove={approvePost}
+                      onReject={rejectPost}
+                      onToggleFeature={toggleFeature}
+                    />
+                  ))}
+                  {group.posts.length === 0 ? (
+                    <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4 text-sm text-[#6d6155]">
+                      No submissions in this box.
+                    </p>
+                  ) : null}
+                </div>
+              </section>
             ))}
             {posts.length === 0 ? (
               <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
@@ -1104,30 +1215,43 @@ export default function AdminPage() {
             </div>
 
             <div className="flex flex-col gap-3 border-t border-[#ded2c1] p-6 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                onClick={() =>
-                  setStatus(selectedPost._id, "rejected", null, reviewComment)
-                }
-                className="secondary-btn px-5 py-3"
-              >
-                Reject submission
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const action = getApprovalAction(selectedPost);
-                  setStatus(
-                    selectedPost._id,
-                    action.status,
-                    action.scheduledAt,
-                    reviewComment,
-                  );
-                }}
-                className="primary-btn px-5 py-3"
-              >
-                {getApprovalAction(selectedPost).label}
-              </button>
+              {selectedPost.status === "pending" ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => rejectPost(selectedPost, reviewComment)}
+                    className="secondary-btn px-5 py-3"
+                  >
+                    Reject submission
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => approvePost(selectedPost, reviewComment)}
+                    className="primary-btn px-5 py-3"
+                  >
+                    {getApprovalAction(selectedPost).label}
+                  </button>
+                </>
+              ) : null}
+              {isApprovedStatus(selectedPost.status) ? (
+                <button
+                  type="button"
+                  onClick={() => rejectPost(selectedPost, reviewComment)}
+                  className="secondary-btn px-5 py-3"
+                  style={{ color: "var(--red)" }}
+                >
+                  Reject this approved upload
+                </button>
+              ) : null}
+              {selectedPost.status === "rejected" ? (
+                <button
+                  type="button"
+                  onClick={() => approvePost(selectedPost, reviewComment)}
+                  className="primary-btn px-5 py-3"
+                >
+                  Approve again
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
