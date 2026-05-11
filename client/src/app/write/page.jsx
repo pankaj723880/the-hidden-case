@@ -10,6 +10,7 @@ import ReadabilityScore from "../../components/ReadabilityScore";
 import { LANGUAGES, isRTL } from "../../lib/languages";
 import VoiceInput from "../../components/VoiceInput";
 import TemplateSelector from "../../components/TemplateSelector";
+import { getMediaUrl } from "../../lib/media";
 
 function getErrorMessage(error) {
   return error?.response?.data?.error || error?.message || "Something failed";
@@ -1272,7 +1273,7 @@ export default function WritePage() {
                     >
                       {coAuthor.avatar ? (
                         <img
-                          src={coAuthor.avatar}
+                          src={getMediaUrl(coAuthor.avatar)}
                           alt=""
                           className="h-6 w-6 rounded-full object-cover"
                         />
@@ -1441,7 +1442,7 @@ export default function WritePage() {
               {(generatedCoverUrl || coverImage) && !imageFile ? (
                 <div className="mt-4 overflow-hidden rounded-md border border-[#ded2c1] bg-[#fffaf2]">
                   <img
-                    src={generatedCoverUrl || coverImage}
+                    src={getMediaUrl(generatedCoverUrl || coverImage)}
                     alt="Cover preview"
                     className="max-h-72 w-full object-contain opacity-100 mix-blend-normal filter-none"
                     style={{ filter: "none" }}

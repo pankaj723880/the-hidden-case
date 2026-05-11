@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../../lib/api";
 import { AppLink, navigate } from "../../../../lib/navigation";
+import { getMediaUrl } from "../../../../lib/media";
 
 function normalize(value) {
   return String(value ?? "").replace(/_/g, " ").trim().toLowerCase();
@@ -56,7 +57,7 @@ export default function ProfileSearchPage({ name }) {
               >
                 {user.avatar ? (
                   <img
-                    src={user.avatar}
+                    src={getMediaUrl(user.avatar)}
                     alt=""
                     className="h-10 w-10 rounded-full object-cover"
                   />

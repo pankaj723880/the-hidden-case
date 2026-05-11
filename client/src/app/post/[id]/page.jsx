@@ -18,6 +18,7 @@ import ContentWarningGate from "../../../components/ContentWarningGate";
 import NextReadCard from "../../../components/NextReadCard";
 import { getLanguage, isRTL } from "../../../lib/languages";
 import { formatDate, formatReadTime } from "../../../lib/format";
+import { getMediaUrl, normalizeMediaHtml } from "../../../lib/media";
 
 function includesUserId(list, userId) {
   return (list ?? []).some((item) => String(item?._id ?? item) === String(userId));
@@ -116,11 +117,11 @@ export default function PostPage({ postId }) {
     : post?.content ?? "";
   let headingCounter = 0;
   const contentWithIds =
-    linkMentions(
+    normalizeMediaHtml(linkMentions(
       showingTranslation && translatedContent
         ? `<p>${translatedContent.split("\n\n").join("</p><p>")}</p>`
         : activeContent,
-    ).replace(/<(h[23])([^>]*)>/gi, (_match, tag) => {
+    )).replace(/<(h[23])([^>]*)>/gi, (_match, tag) => {
       return `<${tag} id="heading-${headingCounter++}">`;
     }) ?? "";
   const authorId = post?.author?._id ?? post?.author?.id;
@@ -532,7 +533,7 @@ export default function PostPage({ postId }) {
                   >
                     {item.from?.avatar ? (
                       <img
-                        src={item.from.avatar}
+                        src={getMediaUrl(item.from.avatar)}
                         alt=""
                         className="h-9 w-9 rounded-full object-cover"
                       />
@@ -624,7 +625,7 @@ export default function PostPage({ postId }) {
           <article>
             {post.coverImage ? (
               <img
-                src={post.coverImage}
+                src={getMediaUrl(post.coverImage)}
                 alt=""
                 className="mb-8 max-h-[620px] w-full rounded-[4px] border object-contain opacity-100 mix-blend-normal filter-none"
                 style={{ filter: "none", borderColor: "var(--border)", boxShadow: "0 4px 20px rgba(44,36,22,0.15)" }}
@@ -632,7 +633,7 @@ export default function PostPage({ postId }) {
             ) : null}
             {post.videoUrl ? (
               <video
-                src={post.videoUrl}
+                src={getMediaUrl(post.videoUrl)}
                 controls
                 className="mb-8 w-full rounded-[4px] border bg-[var(--ink)]"
                 style={{ borderColor: "var(--border)" }}

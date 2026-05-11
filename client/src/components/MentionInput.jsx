@@ -1,3 +1,4 @@
+import { getMediaUrl } from "../lib/media";
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -128,7 +129,7 @@ export default function MentionInput({
               >
                 {user.avatar ? (
                   <img
-                    src={user.avatar}
+                    src={getMediaUrl(user.avatar)}
                     alt=""
                     className="h-8 w-8 rounded-full object-cover"
                   />

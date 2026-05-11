@@ -10,6 +10,7 @@ import CritiqueReport from "../../components/CritiqueReport";
 import BadgeDisplay from "../../components/BadgeDisplay";
 import LevelBadge from "../../components/LevelBadge";
 import { XP_ACTIONS } from "../../lib/levels";
+import { getMediaUrl } from "../../lib/media";
 
 export default function ProfilePage() {
   const { user, isAuthenticated, isLoading, setProfileUser } = useAuth();
@@ -329,7 +330,7 @@ export default function ProfilePage() {
           <div className="flex flex-col items-center text-center">
             {displayUser?.avatar ? (
               <img
-                src={displayUser.avatar}
+                src={getMediaUrl(displayUser.avatar)}
                 alt=""
                 className="h-32 w-32 rounded-full border border-[#d8cab8] object-cover"
               />

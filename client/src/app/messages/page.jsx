@@ -5,6 +5,7 @@ import { api } from "../../lib/api";
 import { navigate } from "../../lib/navigation";
 import { socket } from "../../lib/socket";
 import ReportButton from "../../components/ReportButton";
+import { getMediaUrl } from "../../lib/media";
 
 const reactionOptions = ["❤️", "👍", "😂", "😮", "😢", "🙏"];
 
@@ -62,7 +63,7 @@ function ConversationItem({ conversation, isActive, onOpen, compact = false }) {
     >
       {partner.avatar ? (
         <img
-          src={partner.avatar}
+          src={getMediaUrl(partner.avatar)}
           alt=""
           className={compact ? "h-10 w-10 rounded-full object-cover" : "h-11 w-11 rounded-full object-cover"}
         />
@@ -449,7 +450,7 @@ export default function MessagesPage() {
                 </button>
                 {activeUser.avatar ? (
                   <img
-                    src={activeUser.avatar}
+                    src={getMediaUrl(activeUser.avatar)}
                     alt=""
                     className="h-11 w-11 rounded-full object-cover"
                   />

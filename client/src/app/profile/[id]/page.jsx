@@ -9,6 +9,7 @@ import UserConnectionsModal from "../../../components/UserConnectionsModal";
 import StreakBadge from "../../../components/StreakBadge";
 import BadgeDisplay from "../../../components/BadgeDisplay";
 import LevelBadge from "../../../components/LevelBadge";
+import { getMediaUrl } from "../../../lib/media";
 
 const LEADERBOARD_BADGES = {
   gold: "🥇",
@@ -144,7 +145,7 @@ export default function PublicProfilePage({ profileId }) {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
             {profile.avatar ? (
               <img
-                src={profile.avatar}
+                src={getMediaUrl(profile.avatar)}
                 alt=""
                 className="h-20 w-20 rounded-full border border-white/35 object-cover shadow-[0_18px_50px_rgba(0,0,0,0.28)]"
               />

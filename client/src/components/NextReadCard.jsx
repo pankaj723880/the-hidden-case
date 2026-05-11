@@ -1,3 +1,4 @@
+import { getMediaUrl } from "../lib/media";
 "use client";
 
 import { useEffect, useState } from "react";
@@ -63,7 +64,7 @@ export default function NextReadCard({ currentPostId }) {
       <div className="mt-4 grid gap-4 sm:grid-cols-[150px_1fr]">
         {post.coverImage ? (
           <img
-            src={post.coverImage}
+            src={getMediaUrl(post.coverImage)}
             alt=""
             className="h-40 w-full rounded-[4px] object-cover opacity-100 mix-blend-normal filter-none"
             style={{ filter: "none" }}

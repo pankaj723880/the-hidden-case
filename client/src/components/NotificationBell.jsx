@@ -1,3 +1,4 @@
+import { getMediaUrl } from "../lib/media";
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -206,7 +207,7 @@ export default function NotificationBell() {
                 <div className="flex gap-3">
                   {notification.actor?.avatar ? (
                     <img
-                      src={notification.actor.avatar}
+                      src={getMediaUrl(notification.actor.avatar)}
                       alt=""
                       className="h-10 w-10 rounded-full object-cover"
                     />

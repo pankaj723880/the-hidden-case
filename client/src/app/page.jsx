@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import FeedToggle from "../components/FeedToggle";
 import QuestPanel from "../components/QuestPanel";
 import { getRandomHomeQuoteIndex, homeQuotes } from "../lib/homeQuotes";
+import { getMediaUrl } from "../lib/media";
 
 export default function HomePage() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -295,7 +296,7 @@ export default function HomePage() {
                   </span>
                   {writer.avatar ? (
                     <img
-                      src={writer.avatar}
+                      src={getMediaUrl(writer.avatar)}
                       alt=""
                       className="h-10 w-10 rounded-full object-cover"
                     />

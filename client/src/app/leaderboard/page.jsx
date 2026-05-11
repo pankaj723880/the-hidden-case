@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../lib/api";
 import { AppLink } from "../../lib/navigation";
+import { getMediaUrl } from "../../lib/media";
 
 const BADGE = {
   gold: "🥇",
@@ -10,7 +11,7 @@ const BADGE = {
 
 function Avatar({ user, size = "h-16 w-16" }) {
   return user.avatar ? (
-    <img src={user.avatar} alt="" className={`${size} rounded-full object-cover`} />
+    <img src={getMediaUrl(user.avatar)} alt="" className={`${size} rounded-full object-cover`} />
   ) : (
     <span className={`${size} flex items-center justify-center rounded-full bg-[#ead9c7] font-serif text-xl font-bold text-[#8f5f35]`}>
       {(user.name ?? "U").slice(0, 1).toUpperCase()}

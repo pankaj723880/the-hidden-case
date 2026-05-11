@@ -4,6 +4,7 @@ import { api } from "../../../lib/api";
 import { AppLink, navigate } from "../../../lib/navigation";
 import { useAuth } from "../../../context/AuthContext";
 import PostCard from "../../../components/PostCard";
+import { getMediaUrl } from "../../../lib/media";
 
 export default function GroupDetailPage({ groupId }) {
   const { isAuthenticated } = useAuth();
@@ -86,7 +87,7 @@ export default function GroupDetailPage({ groupId }) {
         <>
           <header className="overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2]">
             {group.coverImage ? (
-              <img src={group.coverImage} alt="" className="h-52 w-full object-cover" />
+              <img src={getMediaUrl(group.coverImage)} alt="" className="h-52 w-full object-cover" />
             ) : (
               <div className="h-52 bg-[linear-gradient(135deg,#2f4638,var(--accent))]" />
             )}
@@ -140,7 +141,7 @@ export default function GroupDetailPage({ groupId }) {
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-[#fffaf2] bg-[#ead9c7] text-sm font-bold text-[#8f5f35]"
                   >
                     {member.avatar ? (
-                      <img src={member.avatar} alt="" className="h-full w-full rounded-full object-cover" />
+                      <img src={getMediaUrl(member.avatar)} alt="" className="h-full w-full rounded-full object-cover" />
                     ) : (
                       (member.name ?? "U").slice(0, 1).toUpperCase()
                     )}

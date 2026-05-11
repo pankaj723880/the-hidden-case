@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../lib/api";
 import { AppLink, navigate } from "../../lib/navigation";
+import { getMediaUrl } from "../../lib/media";
 
 function getAdminMetrics(posts, reports) {
   return [
@@ -1009,7 +1010,7 @@ export default function AdminPage() {
             <div className="space-y-6 p-6">
               {selectedPost.coverImage ? (
                 <img
-                  src={selectedPost.coverImage}
+                  src={getMediaUrl(selectedPost.coverImage)}
                   alt=""
                   className="max-h-[620px] w-full rounded-lg border border-[#d8cab8] object-contain opacity-100 mix-blend-normal filter-none"
                   style={{ filter: "none" }}
@@ -1017,7 +1018,7 @@ export default function AdminPage() {
               ) : null}
               {selectedPost.videoUrl ? (
                 <video
-                  src={selectedPost.videoUrl}
+                  src={getMediaUrl(selectedPost.videoUrl)}
                   controls
                   className="w-full rounded-lg border border-[#d8cab8] bg-[var(--ink)]"
                 />
@@ -1259,7 +1260,7 @@ function AuditLogPanel({
                   <div className="flex gap-3">
                     {log.admin?.avatar ? (
                       <img
-                        src={log.admin.avatar}
+                        src={getMediaUrl(log.admin.avatar)}
                         alt=""
                         className="h-9 w-9 rounded-full object-cover"
                       />

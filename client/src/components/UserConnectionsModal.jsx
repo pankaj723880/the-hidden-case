@@ -1,3 +1,4 @@
+import { getMediaUrl } from "../lib/media";
 "use client";
 
 import { useEffect, useState } from "react";
@@ -119,7 +120,7 @@ export default function UserConnectionsModal({ isOpen, onClose, type, userId }) 
                 >
                   {connectionUser.avatar ? (
                     <img
-                      src={connectionUser.avatar}
+                      src={getMediaUrl(connectionUser.avatar)}
                       alt=""
                       className="h-11 w-11 rounded-full object-cover"
                     />

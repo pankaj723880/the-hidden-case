@@ -5,6 +5,7 @@ import MoodBadge from "./MoodBadge";
 import { getLanguage } from "../lib/languages";
 import { formatDate, formatNumber, formatReadTime } from "../lib/format";
 import { API_URL } from "../lib/api";
+import { getMediaUrl } from "../lib/media";
 
 function hasBookmarked(bookmarks, postId) {
   return (bookmarks ?? []).some((id) => String(id?._id ?? id) === String(postId));
@@ -64,7 +65,7 @@ export default function PostCard({ post, onLike, onShare, sharedPostId }) {
       <AppLink href={`/post/${post._id}`} onClick={trackTitleClick} className="block">
         {post.coverImage ? (
           <img
-            src={post.coverImage}
+            src={getMediaUrl(post.coverImage)}
             alt=""
             className="card-img h-[180px] w-full object-cover opacity-100 mix-blend-normal filter-none"
             style={{ filter: "none" }}

@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { AppLink, navigate, usePathname } from "../../lib/navigation";
 import NotificationBell from "../../components/NotificationBell";
 import MessagesNavLink from "../../components/MessagesNavLink";
+import { getMediaUrl } from "../../lib/media";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -148,7 +149,7 @@ export function Navbar() {
                   >
                     {user?.avatar ? (
                       <img
-                        src={user.avatar}
+                        src={getMediaUrl(user.avatar)}
                         alt={user?.name ? `${user.name} profile` : "Profile"}
                         className="h-[34px] w-[34px] rounded-full border-2 object-cover"
                         style={{ borderColor: "var(--border2)" }}
