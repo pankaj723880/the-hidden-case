@@ -209,12 +209,17 @@ challengesRouter.patch("/:id/winner", requireAuth, requireAdmin, async (req, res
   const isEntry = challenge.entries.some((entryId) => String(entryId) === String(postId));
   if (!isEntry) return res.status(404).json({ error: "Entry not found in this challenge" });
 
-  const post = await PostModel.findById(postId).select("author status");
+  const post = await PostModel.findById(postId).select(
+    "author status adminReviewComment adminReviewedAt adminReviewedBy scheduledAt",
+  );
   if (!post) return res.status(404).json({ error: "Post not found" });
   if (!["approved", "published"].includes(post.status)) {
-    return res
-      .status(400)
-      .json({ error: "Approve the story before announcing it as the winner" });
+    post.status = "approved";
+    post.scheduledAt = null;
+    post.adminReviewComment = "Selected as the challenge winner.";
+    post.adminReviewedAt = new Date();
+    post.adminReviewedBy = req.user?._id ?? req.user?.id ?? null;
+    await post.save();
   }
 
   challenge.winner = {

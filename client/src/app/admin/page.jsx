@@ -491,13 +491,17 @@ export default function AdminPage() {
     }
   };
 
-  const announceChallengeWinner = async (challenge, entry) => {
+  const announceChallengeWinner = async (challengeOrId, entryOrPostId) => {
+    const challengeId = challengeOrId?._id ?? challengeOrId;
+    const postId = entryOrPostId?._id ?? entryOrPostId;
+    if (!challengeId || !postId) return;
+
     setError("");
     try {
-      await api.patch(`/api/challenges/${challenge._id}/winner`, {
-        postId: entry._id,
-      });
+      await api.patch(`/api/challenges/${challengeId}/winner`, { postId });
       await loadChallenges();
+      await loadPosts();
+      setSelectedPost(null);
     } catch (err) {
       setError(
         err?.response?.data?.error ||
@@ -578,6 +582,16 @@ export default function AdminPage() {
   const rejectPost = (post, comment = "") =>
     setStatus(post._id, "rejected", null, comment);
   const selectedPostStatus = String(selectedPost?.status ?? "").toLowerCase();
+  const selectedPostChallengeId = String(
+    selectedPost?.challenge?._id ?? selectedPost?.challenge ?? "",
+  );
+  const selectedPostChallenge = challenges.find(
+    (challenge) => String(challenge._id) === selectedPostChallengeId,
+  );
+  const selectedPostIsChallengeWinner =
+    selectedPostChallenge &&
+    String(selectedPostChallenge.winner?.post?._id ?? "") ===
+      String(selectedPost?._id ?? "");
   const reviewGroups = [
     {
       key: "pending-stories",
@@ -861,9 +875,6 @@ export default function AdminPage() {
                         </p>
                         <div className="mt-3 space-y-2">
                           {challenge.entrySummaries.map((entry) => {
-                            const canAnnounceWinner = ["approved", "published"].includes(
-                              String(entry.status ?? "").toLowerCase(),
-                            );
                             const isWinner =
                               String(challenge.winner?.post?._id ?? "") ===
                               String(entry._id);
@@ -895,15 +906,10 @@ export default function AdminPage() {
                                   <button
                                     type="button"
                                     onClick={() => announceChallengeWinner(challenge, entry)}
-                                    disabled={!canAnnounceWinner}
-                                    className="primary-btn px-3 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-50"
-                                    title={
-                                      canAnnounceWinner
-                                        ? "Announce this story as the winner"
-                                        : "Approve this story before announcing it as winner"
-                                    }
+                                    className="primary-btn px-3 py-2 text-xs"
+                                    title="Select this story as the challenge winner"
                                   >
-                                    Announce winner
+                                    Select winner
                                   </button>
                                 )}
                               </div>
@@ -1270,6 +1276,32 @@ export default function AdminPage() {
                   Only the related author can see this note in their profile submissions.
                 </span>
               </label>
+
+              {selectedPostChallenge ? (
+                <section className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/80 p-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+                    Challenge entry
+                  </p>
+                  <h3 className="serif-title mt-2 text-2xl font-bold text-[#25211d]">
+                    {selectedPostChallenge.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#6d6155]">
+                    Select this story as the winner. If it is still pending or rejected, it will be approved automatically so readers can open it from the homepage.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      announceChallengeWinner(selectedPostChallenge._id, selectedPost._id)
+                    }
+                    disabled={selectedPostIsChallengeWinner}
+                    className="primary-btn mt-4 px-5 py-3 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {selectedPostIsChallengeWinner
+                      ? "Already selected as winner"
+                      : "Select as challenge winner"}
+                  </button>
+                </section>
+              ) : null}
             </div>
 
             <div className="flex flex-col gap-3 border-t border-[#ded2c1] p-6 sm:flex-row sm:justify-end">
