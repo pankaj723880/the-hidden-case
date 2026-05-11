@@ -1,6 +1,6 @@
 /* global self, caches, URL, fetch */
 
-const CACHE_NAME = "the-hidden-case-v1";
+const CACHE_NAME = "the-hidden-case-v3";
 const APP_SHELL = ["/", "/manifest.json", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -26,10 +26,18 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.pathname.startsWith("/api/")) return;
+  if (url.pathname.startsWith("/assets/") || url.pathname.endsWith(".js") || url.pathname.endsWith(".css")) {
+    event.respondWith(fetch(request));
+    return;
+  }
 
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => caches.match("/")),
+      fetch(request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put("/", copy));
+        return response;
+      }).catch(() => caches.match("/")),
     );
     return;
   }
