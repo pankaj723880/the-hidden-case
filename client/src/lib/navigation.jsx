@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { preloadRoute } from "./routePreloaders";
 
 export function navigate(path) {
   window.history.pushState({}, "", path);
@@ -18,6 +19,17 @@ export function usePathname() {
 }
 
 export function AppLink({ href, className, children, onClick, ...props }) {
+  const warmRoute = () => {
+    if (
+      typeof href !== "string" ||
+      href.startsWith("#") ||
+      href.startsWith("http")
+    ) {
+      return;
+    }
+    preloadRoute(href);
+  };
+
   const handleClick = (event) => {
     onClick?.(event);
 
@@ -39,7 +51,15 @@ export function AppLink({ href, className, children, onClick, ...props }) {
   };
 
   return (
-    <a href={href} className={className} onClick={handleClick} {...props}>
+    <a
+      href={href}
+      className={className}
+      onClick={handleClick}
+      onMouseEnter={warmRoute}
+      onFocus={warmRoute}
+      onTouchStart={warmRoute}
+      {...props}
+    >
       {children}
     </a>
   );

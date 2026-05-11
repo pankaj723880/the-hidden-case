@@ -55,6 +55,9 @@ body {
   max-width: 100%;
   overflow-x: hidden;
   background-color: var(--bg);
+  background-image:
+    radial-gradient(rgba(112, 66, 20, 0.055) 0.6px, transparent 0.6px);
+  background-size: 18px 18px;
   color: var(--text);
   font-family: var(--font-lora), Georgia, serif;
   line-height: 1.8;
@@ -163,9 +166,11 @@ textarea::placeholder {
 .admin-sidebar {
   border: 1px solid var(--border);
   background-color: var(--bg2);
+  background-image:
+    linear-gradient(rgba(112, 66, 20, 0.018), rgba(112, 66, 20, 0.018)),
+    radial-gradient(rgba(112, 66, 20, 0.04) 0.5px, transparent 0.5px);
+  background-size: auto, 16px 16px;
   box-shadow: 0 1px 4px rgba(44, 36, 22, 0.06);
-  content-visibility: auto;
-  contain-intrinsic-size: 320px;
 }
 
 .primary-btn {

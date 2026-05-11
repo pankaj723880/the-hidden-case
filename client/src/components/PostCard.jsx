@@ -68,6 +68,8 @@ function PostCard({ post, onLike, onShare, sharedPostId }) {
           <img
             src={getMediaUrl(post.coverImage)}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="card-img h-[180px] w-full object-cover opacity-100 mix-blend-normal filter-none"
             style={{ filter: "none" }}
           />

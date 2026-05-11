@@ -535,6 +535,8 @@ export default function PostPage({ postId }) {
                       <img
                         src={getMediaUrl(item.from.avatar)}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="h-9 w-9 rounded-full object-cover"
                       />
                     ) : (
@@ -627,6 +629,8 @@ export default function PostPage({ postId }) {
               <img
                 src={getMediaUrl(post.coverImage)}
                 alt=""
+                decoding="async"
+                fetchPriority="high"
                 className="mb-8 max-h-[620px] w-full rounded-[4px] border object-contain opacity-100 mix-blend-normal filter-none"
                 style={{ filter: "none", borderColor: "var(--border)", boxShadow: "0 4px 20px rgba(44,36,22,0.15)" }}
               />
