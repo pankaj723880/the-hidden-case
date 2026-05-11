@@ -4,11 +4,22 @@ const API_VERSIONS = ["v1beta", "v1"];
 const FALLBACK_MODELS = [
   "gemini-2.5-flash",
   "gemini-2.0-flash",
-  "gemini-flash-latest",
+  "gemini-2.0-flash-lite",
+  "gemini-1.5-flash",
 ];
+const MODEL_ALIASES = {
+  "gemini-flash-latest": "gemini-2.5-flash",
+  "gemini-flash-lite-latest": "gemini-2.5-flash-lite",
+  "gemini-pro-latest": "gemini-2.5-pro",
+};
 
 function stripModelPrefix(model) {
   return String(model ?? "").replace(/^models\//, "").trim();
+}
+
+function normalizeModel(model) {
+  const stripped = stripModelPrefix(model);
+  return MODEL_ALIASES[stripped] ?? stripped;
 }
 
 async function readJsonResponse(response) {
@@ -46,7 +57,7 @@ async function getModelCandidates(apiVersion, configuredModel) {
   try {
     const availableModels = await listGenerateContentModels(apiVersion);
     const preferred = [configuredModel, ...FALLBACK_MODELS]
-      .map(stripModelPrefix)
+      .map(normalizeModel)
       .filter(Boolean);
     const preferredAvailable = preferred.filter((model) =>
       availableModels.includes(model),
@@ -57,7 +68,7 @@ async function getModelCandidates(apiVersion, configuredModel) {
     );
   } catch {
     return [configuredModel, ...FALLBACK_MODELS]
-      .map(stripModelPrefix)
+      .map(normalizeModel)
       .filter((model, index, list) => model && list.indexOf(model) === index);
   }
 }
@@ -67,7 +78,7 @@ export async function generateText(prompt, maxTokens = 1000) {
     throw new Error("AI_API_KEY is not configured");
   }
 
-  const configuredModel = stripModelPrefix(env.AI_MODEL || "gemini-2.5-flash");
+  const configuredModel = normalizeModel(env.AI_MODEL || "gemini-2.5-flash");
   let lastError = null;
 
   for (const apiVersion of API_VERSIONS) {
