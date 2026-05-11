@@ -370,21 +370,21 @@ export default function MessagesPage() {
   };
 
   if (isLoading) {
-    return <main className="w-full px-4 py-12 text-[#6d6155] sm:px-6 lg:px-8">Loading messages...</main>;
+    return <main className="h-[calc(100vh-7.5rem)] w-full overflow-hidden px-4 py-6 text-[#6d6155] sm:px-6 lg:h-[calc(100vh-5rem)] lg:px-8">Loading messages...</main>;
   }
 
   return (
-    <main className="w-full px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-6">
+    <main className="flex h-[calc(100vh-7.5rem)] w-full flex-col overflow-hidden px-4 py-4 sm:px-6 lg:h-[calc(100vh-5rem)] lg:px-8">
+      <header className="mb-4 shrink-0">
         <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
           Direct messages
         </p>
-        <h1 className="serif-title mt-2 text-5xl font-bold text-[#25211d]">
+        <h1 className="serif-title mt-1 text-4xl font-bold text-[#25211d] sm:text-5xl">
           Messages
         </h1>
       </header>
 
-      <section className="grid h-[calc(100vh-14rem)] min-h-[30rem] w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[340px_minmax(0,1fr)]">
+      <section className="grid min-h-0 flex-1 w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="hidden h-full overflow-hidden border-b border-[#ded2c1] lg:flex lg:flex-col lg:border-b-0 lg:border-r">
           <div className="border-b border-[#ded2c1] px-4 py-3">
             <p className="text-sm font-bold text-[#352a20]">Conversations</p>
