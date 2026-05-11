@@ -7,7 +7,7 @@ import { getMediaUrl } from "../../lib/media";
 
 export function Navbar() {
   const pathname = usePathname();
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, isLoading, logout, user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isAdmin = user?.role === "admin";
 
@@ -137,7 +137,14 @@ export function Navbar() {
               {navLabel("✎", "Write")}
             </AppLink>
           )}
-          {isAuthenticated ? (
+          {isLoading ? (
+            <div className="flex h-9 min-w-[5.5rem] items-center justify-end sm:h-10" aria-label="Checking session">
+              <span
+                className="block h-8 w-20 rounded-[3px]"
+                style={{ backgroundColor: "var(--bg3)" }}
+              />
+            </div>
+          ) : isAuthenticated ? (
             <>
               <MessagesNavLink />
               <NotificationBell />

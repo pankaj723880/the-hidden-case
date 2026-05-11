@@ -83,6 +83,7 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     setIsLoading(true);
     try {
+      storeAccessToken("");
       const res = await api.post("/api/auth/login", { email, password });
       const receivedAccessToken = String(res.data.accessToken ?? "");
       if (!receivedAccessToken)
@@ -103,6 +104,7 @@ export function AuthProvider({ children }) {
   const loginWithGoogle = useCallback(async (credential) => {
     setIsLoading(true);
     try {
+      storeAccessToken("");
       const res = await api.post("/api/auth/google", { credential });
       const receivedAccessToken = String(res.data.accessToken ?? "");
       if (!receivedAccessToken)
@@ -123,6 +125,7 @@ export function AuthProvider({ children }) {
   const register = useCallback(async (name, email, password) => {
     setIsLoading(true);
     try {
+      storeAccessToken("");
       await api.post("/api/auth/register", { name, email, password });
       const res = await api.post("/api/auth/login", { email, password });
       const receivedAccessToken = String(res.data.accessToken ?? "");
@@ -159,18 +162,23 @@ export function AuthProvider({ children }) {
     // refreshToken is httpOnly cookie; accessToken is held in-memory.
     void (async () => {
       try {
-        const savedAccessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY);
-        if (savedAccessToken && isTokenUsable(savedAccessToken)) {
-          setAccessToken(savedAccessToken);
-          setApiAccessToken(savedAccessToken);
-          const decodedUser = decodeUserFromAccessToken(savedAccessToken);
-          setUser(await fetchCurrentUserProfile(decodedUser));
-          return;
-        }
-        storeAccessToken("");
         await refreshAccessTokenImpl();
       } catch {
-        // ignore (user will remain unauthenticated)
+        try {
+          const savedAccessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY);
+          if (savedAccessToken && isTokenUsable(savedAccessToken)) {
+            setAccessToken(savedAccessToken);
+            setApiAccessToken(savedAccessToken);
+            const decodedUser = decodeUserFromAccessToken(savedAccessToken);
+            setUser(await fetchCurrentUserProfile(decodedUser));
+            return;
+          }
+        } catch {
+          // Fall through and clear invalid local auth state.
+        }
+        setAccessToken(null);
+        setApiAccessToken(null);
+        setUser(null);
         storeAccessToken("");
       } finally {
         setIsLoading(false);
