@@ -35,9 +35,32 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "assets/[name].[contenthash].js",
+    chunkFilename: "assets/[name].[contenthash].js",
     assetModuleFilename: "assets/[hash][ext][query]",
     clean: true,
     publicPath: "/",
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+          name: "react",
+          priority: 20,
+        },
+        editor: {
+          test: /[\\/]node_modules[\\/](@tiptap|lowlight|highlight\.js)[\\/]/,
+          name: "editor",
+          priority: 15,
+        },
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          priority: 10,
+        },
+      },
+    },
   },
   resolve: {
     extensions: [".js", ".jsx"],

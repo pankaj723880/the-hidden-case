@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { AppLink } from "../lib/navigation";
 import { useAuth } from "../context/AuthContext";
 import BookmarkButton from "./BookmarkButton";
@@ -19,7 +20,7 @@ function authorLine(post) {
   return `${authorName} & ${coAuthors.length} others`;
 }
 
-export default function PostCard({ post, onLike, onShare, sharedPostId }) {
+function PostCard({ post, onLike, onShare, sharedPostId }) {
   const { user } = useAuth();
   const authorId = post.author?._id ?? post.author?.id;
   const tags = post.tags ?? [];
@@ -188,3 +189,5 @@ export default function PostCard({ post, onLike, onShare, sharedPostId }) {
     </article>
   );
 }
+
+export default memo(PostCard);

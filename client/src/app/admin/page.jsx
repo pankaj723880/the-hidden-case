@@ -234,6 +234,7 @@ export default function AdminPage() {
     if (isLoading || !isAuthenticated || user?.role !== "admin") return undefined;
 
     const interval = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
       void (async () => {
         try {
           const [postsRes, reportsRes, plagiarismRes] = await Promise.all([
@@ -248,7 +249,7 @@ export default function AdminPage() {
           // Keep the current dashboard values if a realtime refresh misses.
         }
       })();
-    }, 5000);
+    }, 30000);
 
     return () => {
       window.clearInterval(interval);

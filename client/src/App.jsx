@@ -1,27 +1,29 @@
+import { Suspense, lazy } from "react";
 import { AuthProviderWrapper } from "./app/AuthProviderWrapper";
 import { Navbar } from "./app/components/Navbar";
-import HomePage from "./app/page";
-import BrowsePage from "./app/browse/page";
-import WritePage from "./app/write/page";
-import LoginPage from "./app/login/page";
-import RegisterPage from "./app/register/page";
-import ProfilePage from "./app/profile/page";
-import PublicProfilePage from "./app/profile/[id]/page";
-import ProfileSearchPage from "./app/profile/search/[name]/page";
-import AdminPage from "./app/admin/page";
-import PostPage from "./app/post/[id]/page";
-import SeriesPage from "./app/series/page";
-import SeriesDetailPage from "./app/series/[id]/page";
-import TagsPage from "./app/tags/page";
-import TagDetailPage from "./app/tags/[tag]/page";
-import ChallengesPage from "./app/challenges/page";
-import ChallengeDetailPage from "./app/challenges/[id]/page";
-import GroupsPage from "./app/groups/page";
-import GroupDetailPage from "./app/groups/[id]/page";
-import AnalyticsPage from "./app/analytics/page";
-import LeaderboardPage from "./app/leaderboard/page";
-import MessagesPage from "./app/messages/page";
 import { usePathname } from "./lib/navigation";
+
+const HomePage = lazy(() => import("./app/page"));
+const BrowsePage = lazy(() => import("./app/browse/page"));
+const WritePage = lazy(() => import("./app/write/page"));
+const LoginPage = lazy(() => import("./app/login/page"));
+const RegisterPage = lazy(() => import("./app/register/page"));
+const ProfilePage = lazy(() => import("./app/profile/page"));
+const PublicProfilePage = lazy(() => import("./app/profile/[id]/page"));
+const ProfileSearchPage = lazy(() => import("./app/profile/search/[name]/page"));
+const AdminPage = lazy(() => import("./app/admin/page"));
+const PostPage = lazy(() => import("./app/post/[id]/page"));
+const SeriesPage = lazy(() => import("./app/series/page"));
+const SeriesDetailPage = lazy(() => import("./app/series/[id]/page"));
+const TagsPage = lazy(() => import("./app/tags/page"));
+const TagDetailPage = lazy(() => import("./app/tags/[tag]/page"));
+const ChallengesPage = lazy(() => import("./app/challenges/page"));
+const ChallengeDetailPage = lazy(() => import("./app/challenges/[id]/page"));
+const GroupsPage = lazy(() => import("./app/groups/page"));
+const GroupDetailPage = lazy(() => import("./app/groups/[id]/page"));
+const AnalyticsPage = lazy(() => import("./app/analytics/page"));
+const LeaderboardPage = lazy(() => import("./app/leaderboard/page"));
+const MessagesPage = lazy(() => import("./app/messages/page"));
 
 function NotFoundPage() {
   return (
@@ -80,8 +82,16 @@ export default function App() {
   return (
     <AuthProviderWrapper>
       <Navbar />
-      <div className="flex-1 transition-all">
-        <RouteView />
+      <div className="flex-1">
+        <Suspense
+          fallback={
+            <main className="editorial-shell py-12" style={{ color: "var(--text2)" }}>
+              Loading...
+            </main>
+          }
+        >
+          <RouteView />
+        </Suspense>
       </div>
     </AuthProviderWrapper>
   );

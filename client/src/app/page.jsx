@@ -347,7 +347,6 @@ export default function HomePage() {
               <div
                 key={post._id}
                 className="relative min-w-0"
-                style={{ filter: "drop-shadow(0 0 16px rgba(122, 79, 45, 0.18))" }}
               >
                 <span className="absolute left-3 top-3 z-20 rounded-[3px] px-3 py-1 text-sm font-black text-[#faf7f2] shadow-lg" style={{ background: "var(--accent)" }}>
                   #{index + 1}
