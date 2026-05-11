@@ -641,7 +641,7 @@ export default function MessagesPage() {
 
               <form
                 onSubmit={sendMessage}
-                className={`${mobileView === "chat" ? "flex" : "hidden"} gap-3 border-t border-[#ded2c1] p-4 lg:flex`}
+                className={`${mobileView === "chat" ? "flex" : "hidden"} sticky bottom-0 z-10 shrink-0 gap-3 border-t border-[#ded2c1] bg-[#fffaf2] p-4 lg:flex`}
               >
                 <textarea
                   value={draft}
