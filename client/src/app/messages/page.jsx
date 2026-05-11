@@ -384,12 +384,12 @@ export default function MessagesPage() {
         </h1>
       </header>
 
-      <section className="grid min-h-[calc(100vh-13rem)] w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[340px_minmax(0,1fr)]">
-        <aside className="hidden border-b border-[#ded2c1] lg:block lg:border-b-0 lg:border-r">
+      <section className="grid h-[calc(100vh-14rem)] min-h-[30rem] w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[340px_minmax(0,1fr)]">
+        <aside className="hidden h-full overflow-hidden border-b border-[#ded2c1] lg:flex lg:flex-col lg:border-b-0 lg:border-r">
           <div className="border-b border-[#ded2c1] px-4 py-3">
             <p className="text-sm font-bold text-[#352a20]">Conversations</p>
           </div>
-          <div className="max-h-[calc(100vh-16rem)] overflow-y-auto">
+          <div className="min-h-0 flex-1 overflow-y-auto">
             {conversations.length === 0 ? (
               <p className="p-4 text-sm text-[#8b7f72]">
                 No messages yet. Open an author profile and send a message.
@@ -409,8 +409,8 @@ export default function MessagesPage() {
           </div>
         </aside>
 
-        <section className="flex min-h-[calc(100vh-13rem)] min-w-0 flex-col">
-          <div className={`${mobileView === "list" ? "block" : "hidden"} min-h-[calc(100vh-13rem)] lg:hidden`}>
+        <section className="flex h-full min-h-0 min-w-0 flex-col">
+          <div className={`${mobileView === "list" ? "block" : "hidden"} h-full overflow-y-auto lg:hidden`}>
             <div className="border-b border-[#ded2c1] px-4 py-3">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8f5f35]">
                 Conversations
