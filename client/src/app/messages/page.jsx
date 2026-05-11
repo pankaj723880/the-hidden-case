@@ -44,6 +44,78 @@ function upsertMessage(messages, nextMessage) {
   );
 }
 
+function ConversationItem({ conversation, isActive, onOpen, compact = false }) {
+  const partner = conversation.user;
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(partner)}
+      className={
+        compact
+          ? "flex w-20 shrink-0 flex-col items-center gap-1 rounded-[4px] border p-2 text-center transition"
+          : "flex w-full gap-3 border-b border-[#ead9c7] p-4 text-left transition hover:bg-[#ead9c7]/35"
+      }
+      style={{
+        backgroundColor: isActive ? "#ead9c7" : "transparent",
+        borderColor: isActive ? "#c8a978" : "#ead9c7",
+      }}
+    >
+      {partner.avatar ? (
+        <img
+          src={partner.avatar}
+          alt=""
+          className={compact ? "h-10 w-10 rounded-full object-cover" : "h-11 w-11 rounded-full object-cover"}
+        />
+      ) : (
+        <span
+          className={
+            compact
+              ? "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#ead9c7] font-serif font-bold text-[#8f5f35]"
+              : "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ead9c7] font-serif font-bold text-[#8f5f35]"
+          }
+        >
+          {initials(partner.name)}
+        </span>
+      )}
+      {compact ? (
+        <>
+          <span className="w-full truncate text-xs font-bold text-[#25211d]">
+            {partner.name}
+          </span>
+          {conversation.unreadCount > 0 ? (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[10px] font-black text-white">
+              {conversation.unreadCount > 9 ? "9+" : conversation.unreadCount}
+            </span>
+          ) : null}
+        </>
+      ) : (
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center justify-between gap-2">
+            <span className="truncate font-bold text-[#25211d]">
+              {partner.name}
+            </span>
+            <span className="shrink-0 text-xs font-semibold text-[#8b7f72]">
+              {timeAgo(conversation.lastMessage?.createdAt)}
+            </span>
+          </span>
+          <span className="mt-1 flex items-center gap-2">
+            <span className="truncate text-sm text-[#6d6155]">
+              {conversation.lastMessage?.deleted
+                ? "This message was deleted"
+                : conversation.lastMessage?.text ?? ""}
+            </span>
+            {conversation.unreadCount > 0 ? (
+              <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[11px] font-black text-white">
+                {conversation.unreadCount > 9 ? "9+" : conversation.unreadCount}
+              </span>
+            ) : null}
+          </span>
+        </span>
+      )}
+    </button>
+  );
+}
+
 export default function MessagesPage() {
   const { user, accessToken, isAuthenticated, isLoading } = useAuth();
   const [conversations, setConversations] = useState([]);
@@ -284,7 +356,7 @@ export default function MessagesPage() {
       </header>
 
       <section className="grid min-h-[68vh] overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[280px_1fr]">
-        <aside className="border-b border-[#ded2c1] lg:border-b-0 lg:border-r">
+        <aside className="hidden border-b border-[#ded2c1] lg:block lg:border-b-0 lg:border-r">
           <div className="border-b border-[#ded2c1] px-4 py-3">
             <p className="text-sm font-bold text-[#352a20]">Conversations</p>
           </div>
@@ -295,59 +367,45 @@ export default function MessagesPage() {
               </p>
             ) : null}
             {conversations.map((conversation) => {
-              const partner = conversation.user;
-              const partnerId = userIdOf(partner);
-              const isActive = partnerId === activeUserId;
+              const partnerId = userIdOf(conversation.user);
               return (
-                <button
+                <ConversationItem
                   key={partnerId}
-                  type="button"
-                  onClick={() => openConversation(partner)}
-                  className="flex w-full gap-3 border-b border-[#ead9c7] p-4 text-left transition hover:bg-[#ead9c7]/35"
-                  style={{ backgroundColor: isActive ? "#ead9c7" : "transparent" }}
-                >
-                  {partner.avatar ? (
-                    <img
-                      src={partner.avatar}
-                      alt=""
-                      className="h-11 w-11 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#ead9c7] font-serif font-bold text-[#8f5f35]">
-                      {initials(partner.name)}
-                    </span>
-                  )}
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center justify-between gap-2">
-                      <span className="truncate font-bold text-[#25211d]">
-                        {partner.name}
-                      </span>
-                      <span className="shrink-0 text-xs font-semibold text-[#8b7f72]">
-                        {timeAgo(conversation.lastMessage?.createdAt)}
-                      </span>
-                    </span>
-                    <span className="mt-1 flex items-center gap-2">
-                      <span className="truncate text-sm text-[#6d6155]">
-                        {conversation.lastMessage?.deleted
-                          ? "This message was deleted"
-                          : conversation.lastMessage?.text ?? ""}
-                      </span>
-                      {conversation.unreadCount > 0 ? (
-                        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[11px] font-black text-white">
-                          {conversation.unreadCount > 9
-                            ? "9+"
-                            : conversation.unreadCount}
-                        </span>
-                      ) : null}
-                    </span>
-                  </span>
-                </button>
+                  conversation={conversation}
+                  isActive={partnerId === activeUserId}
+                  onOpen={openConversation}
+                />
               );
             })}
           </div>
         </aside>
 
-        <section className="flex min-h-[68vh] flex-col">
+        <section className="flex min-h-[68vh] min-w-0 flex-col">
+          <div className="border-b border-[#ded2c1] p-3 lg:hidden">
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-[#8f5f35]">
+              Conversations
+            </p>
+            {conversations.length === 0 ? (
+              <p className="text-sm text-[#8b7f72]">
+                No messages yet. Open an author profile and send a message.
+              </p>
+            ) : (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {conversations.map((conversation) => {
+                  const partnerId = userIdOf(conversation.user);
+                  return (
+                    <ConversationItem
+                      key={partnerId}
+                      conversation={conversation}
+                      isActive={partnerId === activeUserId}
+                      onOpen={openConversation}
+                      compact
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
           {activeUser ? (
             <>
               <div className="flex flex-wrap items-center gap-3 border-b border-[#ded2c1] px-5 py-4">
@@ -405,7 +463,7 @@ export default function MessagesPage() {
                 </div>
               </div>
 
-              <div className="flex-1 space-y-3 overflow-y-auto bg-[#f7efe5] p-5">
+              <div className="flex-1 space-y-4 overflow-y-auto bg-[#f7efe5] p-4 sm:p-5">
                 {isLoadingMessages ? (
                   <p className="text-sm text-[#8b7f72]">Loading conversation...</p>
                 ) : null}
@@ -414,16 +472,22 @@ export default function MessagesPage() {
                   return (
                     <div
                       key={message._id}
-                      className={`flex ${isMine ? "justify-end" : "justify-start"}`}
+                      className={`flex w-full ${isMine ? "justify-end" : "justify-start"}`}
                     >
                       <div
-                        className="max-w-[78%] rounded-2xl px-4 py-3 shadow-sm"
+                        className={`max-w-[82%] rounded-2xl px-4 py-3 shadow-sm sm:max-w-[70%] ${isMine ? "rounded-br-[4px]" : "rounded-bl-[4px]"}`}
                         style={{
                           backgroundColor: isMine ? "var(--accent)" : "#fffaf2",
                           color: isMine ? "#fff" : "#352a20",
                           border: isMine ? "none" : "1px solid #ded2c1",
                         }}
                       >
+                        <p
+                          className="mb-1 text-[11px] font-black uppercase tracking-[0.12em]"
+                          style={{ color: isMine ? "rgba(255,255,255,0.72)" : "#8f5f35" }}
+                        >
+                          {isMine ? "You" : activeUser.name}
+                        </p>
                         <p className={`whitespace-pre-wrap text-sm leading-6 ${message.deleted ? "italic opacity-70" : ""}`}>
                           {message.deleted ? "This message was deleted" : message.text}
                         </p>
