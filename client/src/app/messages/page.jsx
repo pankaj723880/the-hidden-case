@@ -374,12 +374,12 @@ export default function MessagesPage() {
   }
 
   return (
-    <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] flex w-full flex-col overflow-hidden px-4 py-4 sm:px-6 lg:top-[5rem] lg:px-8">
-      <header className="mb-4 shrink-0">
-        <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
+    <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] flex w-full flex-col overflow-hidden px-4 py-3 sm:px-6 lg:top-[5rem] lg:px-8">
+      <header className="mb-3 shrink-0">
+        <p className="text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[#8f5f35]">
           Direct messages
         </p>
-        <h1 className="serif-title mt-1 text-4xl font-bold text-[#25211d] sm:text-5xl">
+        <h1 className="serif-title mt-0.5 text-3xl font-bold text-[#25211d] sm:text-4xl">
           Messages
         </h1>
       </header>
