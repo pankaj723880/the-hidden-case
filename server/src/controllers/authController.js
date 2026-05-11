@@ -75,13 +75,16 @@ async function issueSession(req, res, user) {
   user.refreshToken = refreshToken;
   await user.save();
 
-  res.cookie("refreshToken", refreshToken, {
+  const isCrossSiteClient = /^https:\/\//i.test(env.CLIENT_URL);
+  const refreshCookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isCrossSiteClient || process.env.NODE_ENV === "production",
+    sameSite: isCrossSiteClient ? "none" : "lax",
     path: "/api/auth/refresh",
     maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  };
+
+  res.cookie("refreshToken", refreshToken, refreshCookieOptions);
 
   await recordLoginActivity(req, user, refreshToken);
   return res.json({ accessToken });
@@ -293,7 +296,12 @@ export async function logout(req, res) {
     }
   }
 
-  res.clearCookie("refreshToken", { path: "/api/auth/refresh" });
+  const isCrossSiteClient = /^https:\/\//i.test(env.CLIENT_URL);
+  res.clearCookie("refreshToken", {
+    path: "/api/auth/refresh",
+    secure: isCrossSiteClient || process.env.NODE_ENV === "production",
+    sameSite: isCrossSiteClient ? "none" : "lax",
+  });
   return res.status(200).json({ ok: true });
 }
 
