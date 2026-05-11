@@ -79,21 +79,44 @@ function RouteView() {
   return <NotFoundPage />;
 }
 
-export default function App() {
+function AppContent() {
+  const pathname = usePathname();
+  const isMessagesPage = pathname === "/messages";
+
   return (
-    <AuthProviderWrapper>
+    <>
       <Navbar />
-      <div className="min-h-screen flex-1 pt-[7.5rem] lg:pt-[5rem]">
+      <div
+        className={
+          isMessagesPage
+            ? "h-0 flex-1 overflow-hidden"
+            : "min-h-screen flex-1 pt-[7.5rem] lg:pt-[5rem]"
+        }
+      >
         <Suspense
           fallback={
-            <main className="editorial-shell py-12" style={{ color: "var(--text2)" }}>
-              Loading...
-            </main>
+            isMessagesPage ? (
+              <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] w-full overflow-hidden px-4 py-6 text-[#6d6155] sm:px-6 lg:top-[5rem] lg:px-8">
+                Loading...
+              </main>
+            ) : (
+              <main className="editorial-shell py-12" style={{ color: "var(--text2)" }}>
+                Loading...
+              </main>
+            )
           }
         >
           <RouteView />
         </Suspense>
       </div>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProviderWrapper>
+      <AppContent />
     </AuthProviderWrapper>
   );
 }
