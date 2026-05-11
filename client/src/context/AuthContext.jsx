@@ -12,6 +12,7 @@ import { api, setApiAccessToken } from "../lib/api";
 
 const AuthContext = createContext(undefined);
 const ACCESS_TOKEN_KEY = "thc-access-token";
+const LEGACY_ACCESS_TOKEN_KEY = "thc-access-token";
 
 function decodeUserFromAccessToken(token) {
   try {
@@ -43,11 +44,17 @@ function isTokenUsable(token) {
 }
 
 function storeAccessToken(token) {
+  window.localStorage.removeItem(LEGACY_ACCESS_TOKEN_KEY);
   if (token) {
-    window.localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    window.sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
   } else {
-    window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+    window.sessionStorage.removeItem(ACCESS_TOKEN_KEY);
   }
+}
+
+function getStoredAccessToken() {
+  window.localStorage.removeItem(LEGACY_ACCESS_TOKEN_KEY);
+  return window.sessionStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
 async function fetchCurrentUserProfile(decodedUser) {
@@ -162,20 +169,21 @@ export function AuthProvider({ children }) {
     // refreshToken is httpOnly cookie; accessToken is held in-memory.
     void (async () => {
       try {
+        const savedAccessToken = getStoredAccessToken();
+        if (savedAccessToken && isTokenUsable(savedAccessToken)) {
+          setAccessToken(savedAccessToken);
+          setApiAccessToken(savedAccessToken);
+          const decodedUser = decodeUserFromAccessToken(savedAccessToken);
+          setUser(await fetchCurrentUserProfile(decodedUser));
+          return;
+        }
+      } catch {
+        // Fall through and refresh from cookie.
+      }
+
+      try {
         await refreshAccessTokenImpl();
       } catch {
-        try {
-          const savedAccessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY);
-          if (savedAccessToken && isTokenUsable(savedAccessToken)) {
-            setAccessToken(savedAccessToken);
-            setApiAccessToken(savedAccessToken);
-            const decodedUser = decodeUserFromAccessToken(savedAccessToken);
-            setUser(await fetchCurrentUserProfile(decodedUser));
-            return;
-          }
-        } catch {
-          // Fall through and clear invalid local auth state.
-        }
         setAccessToken(null);
         setApiAccessToken(null);
         setUser(null);
