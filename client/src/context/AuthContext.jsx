@@ -175,6 +175,7 @@ export function AuthProvider({ children }) {
           setApiAccessToken(savedAccessToken);
           const decodedUser = decodeUserFromAccessToken(savedAccessToken);
           setUser(await fetchCurrentUserProfile(decodedUser));
+          setIsLoading(false);
           return;
         }
       } catch {
