@@ -83,7 +83,7 @@ export default function App() {
   return (
     <AuthProviderWrapper>
       <Navbar />
-      <div className="flex-1">
+      <div className="min-h-screen flex-1 pt-[7.5rem] lg:pt-[5rem]">
         <Suspense
           fallback={
             <main className="editorial-shell py-12" style={{ color: "var(--text2)" }}>
