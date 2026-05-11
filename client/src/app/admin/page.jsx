@@ -121,7 +121,9 @@ function stripHtml(value) {
 }
 
 function isApprovedStatus(status) {
-  return ["approved", "published", "scheduled"].includes(status);
+  return ["approved", "published", "scheduled"].includes(
+    String(status ?? "").toLowerCase(),
+  );
 }
 
 function AdminPostCard({
@@ -133,8 +135,9 @@ function AdminPostCard({
   onToggleFeature,
 }) {
   const approved = isApprovedStatus(post.status);
-  const rejected = post.status === "rejected";
-  const pending = post.status === "pending";
+  const status = String(post.status ?? "").toLowerCase();
+  const rejected = status === "rejected";
+  const pending = status === "pending";
 
   return (
     <article className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4">
@@ -552,11 +555,13 @@ export default function AdminPage() {
     return { status: "approved", scheduledAt: null, label: "Approve and publish" };
   };
   const approvePost = (post, comment = "") => {
+    if (isApprovedStatus(post?.status)) return Promise.resolve();
     const action = getApprovalAction(post);
     return setStatus(post._id, action.status, action.scheduledAt, comment);
   };
   const rejectPost = (post, comment = "") =>
     setStatus(post._id, "rejected", null, comment);
+  const selectedPostStatus = String(selectedPost?.status ?? "").toLowerCase();
   const reviewGroups = [
     {
       key: "pending-stories",
@@ -1215,7 +1220,7 @@ export default function AdminPage() {
             </div>
 
             <div className="flex flex-col gap-3 border-t border-[#ded2c1] p-6 sm:flex-row sm:justify-end">
-              {selectedPost.status === "pending" ? (
+              {selectedPostStatus === "pending" ? (
                 <>
                   <button
                     type="button"
@@ -1233,7 +1238,7 @@ export default function AdminPage() {
                   </button>
                 </>
               ) : null}
-              {isApprovedStatus(selectedPost.status) ? (
+              {isApprovedStatus(selectedPostStatus) ? (
                 <button
                   type="button"
                   onClick={() => rejectPost(selectedPost, reviewComment)}
@@ -1243,7 +1248,7 @@ export default function AdminPage() {
                   Reject this approved upload
                 </button>
               ) : null}
-              {selectedPost.status === "rejected" ? (
+              {selectedPostStatus === "rejected" ? (
                 <button
                   type="button"
                   onClick={() => approvePost(selectedPost, reviewComment)}
