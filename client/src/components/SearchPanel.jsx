@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api";
 
 const defaultFilters = {
@@ -47,6 +47,7 @@ export default function SearchPanel({ onSearch }) {
   const [filters, setFilters] = useState(defaultFilters);
   const [appliedFilters, setAppliedFilters] = useState({});
   const [tags, setTags] = useState([]);
+  const wrapperRef = useRef(null);
 
   const activeEntries = useMemo(
     () => Object.entries(appliedFilters).filter(([, value]) => value),
@@ -69,6 +70,21 @@ export default function SearchPanel({ onSearch }) {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!wrapperRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
 
   const updateFilter = (key, value) => {
     setFilters((current) => ({ ...current, [key]: value }));
@@ -98,7 +114,7 @@ export default function SearchPanel({ onSearch }) {
   };
 
   return (
-    <section className="mb-8">
+    <section className="mb-8" ref={wrapperRef}>
       <button
         type="button"
         onClick={() => setIsOpen((current) => !current)}

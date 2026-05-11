@@ -132,6 +132,8 @@ export default function MessagesPage() {
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const bottomRef = useRef(null);
+  const chatMenuRef = useRef(null);
+  const popupLayerRef = useRef(null);
 
   const activeUserId = userIdOf(activeUser);
   const currentUserId = String(user?.id ?? user?._id ?? "");
@@ -250,6 +252,29 @@ export default function MessagesPage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!isChatMenuOpen && !reactionMenuMessageId && !deleteMenuMessageId) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event) => {
+      if (
+        chatMenuRef.current?.contains(event.target) ||
+        popupLayerRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      setIsChatMenuOpen(false);
+      setReactionMenuMessageId("");
+      setDeleteMenuMessageId("");
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [deleteMenuMessageId, isChatMenuOpen, reactionMenuMessageId]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -426,7 +451,7 @@ export default function MessagesPage() {
                     {isBlocked ? "Blocked conversation" : "Private conversation"}
                   </p>
                 </div>
-                <div className="relative">
+                <div className="relative" ref={chatMenuRef}>
                   <button
                     type="button"
                     onClick={() => setIsChatMenuOpen((current) => !current)}
@@ -519,7 +544,7 @@ export default function MessagesPage() {
                         </p>
                         {!message.deleted ? (
                           <div className={`mt-2 flex flex-wrap items-center gap-2 ${isMine ? "justify-end" : "justify-start"}`}>
-                            <div className="relative">
+                            <div className="relative" ref={reactionMenuMessageId === message._id ? popupLayerRef : null}>
                               <button
                                 type="button"
                                 onClick={() =>
@@ -552,7 +577,7 @@ export default function MessagesPage() {
                                 </div>
                               ) : null}
                             </div>
-                            <div className="relative">
+                            <div className="relative" ref={deleteMenuMessageId === message._id ? popupLayerRef : null}>
                               <button
                                 type="button"
                                 onClick={() =>

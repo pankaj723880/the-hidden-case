@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
@@ -26,6 +26,7 @@ export default function ReportButton({
   const [reason, setReason] = useState("spam");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const wrapperRef = useRef(null);
 
   if (!isAuthenticated || submitted) return null;
 
@@ -57,8 +58,23 @@ export default function ReportButton({
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!wrapperRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={wrapperRef}>
       <button
         type="button"
         disabled={disabled || !contentId}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../lib/api";
 import { socket } from "../lib/socket";
@@ -39,6 +39,7 @@ export default function NotificationBell() {
   const { isAuthenticated, accessToken } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef(null);
 
   const unreadCount = useMemo(
     () => notifications.filter((notification) => !notification.read).length,
@@ -107,6 +108,21 @@ export default function NotificationBell() {
     if (nextOpen) await markAllRead();
   };
 
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!wrapperRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
+
   const respondToCoAuthorInvite = async (notification, response) => {
     const postId = notification.post?._id;
     if (!postId) return;
@@ -127,7 +143,7 @@ export default function NotificationBell() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={wrapperRef}>
       <button
         type="button"
         onClick={toggleOpen}
