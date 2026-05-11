@@ -491,6 +491,22 @@ export default function AdminPage() {
     }
   };
 
+  const announceChallengeWinner = async (challenge, entry) => {
+    setError("");
+    try {
+      await api.patch(`/api/challenges/${challenge._id}/winner`, {
+        postId: entry._id,
+      });
+      await loadChallenges();
+    } catch (err) {
+      setError(
+        err?.response?.data?.error ||
+          err?.message ||
+          "Failed to announce challenge winner",
+      );
+    }
+  };
+
   const openAdminSection = (section) => {
     setActiveAdminSection(section);
     if (section === "audit" && auditLogs.length === 0) {
@@ -822,6 +838,14 @@ export default function AdminPage() {
                         <p className="mt-1 text-xs font-semibold text-[#8b7f72]">
                           {challenge.entryCount ?? 0} entries
                         </p>
+                        {challenge.winner?.post ? (
+                          <p className="mt-2 text-xs font-bold text-[#5f7263]">
+                            Winner: {challenge.winner.post.title} by{" "}
+                            {challenge.winner.post.author?.name ??
+                              challenge.winner.author?.name ??
+                              "Unknown"}
+                          </p>
+                        ) : null}
                       </div>
                       <span className="rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#8f5f35]">
                         {challenge.status}
@@ -836,7 +860,14 @@ export default function AdminPage() {
                           Applied users / submissions
                         </p>
                         <div className="mt-3 space-y-2">
-                          {challenge.entrySummaries.map((entry) => (
+                          {challenge.entrySummaries.map((entry) => {
+                            const canAnnounceWinner = ["approved", "published"].includes(
+                              String(entry.status ?? "").toLowerCase(),
+                            );
+                            const isWinner =
+                              String(challenge.winner?.post?._id ?? "") ===
+                              String(entry._id);
+                            return (
                             <div
                               key={entry._id}
                               className="flex flex-col gap-2 rounded-md bg-[#fffaf2] p-3 sm:flex-row sm:items-center sm:justify-between"
@@ -849,14 +880,36 @@ export default function AdminPage() {
                                   By {entry.author?.name ?? "Unknown"} · {entry.status}
                                 </p>
                               </div>
-                              <AppLink
-                                href={`/post/${entry._id}`}
-                                className="secondary-btn shrink-0 px-3 py-2 text-center text-xs"
-                              >
-                                Review post
-                              </AppLink>
+                              <div className="flex shrink-0 flex-wrap gap-2">
+                                <AppLink
+                                  href={`/post/${entry._id}`}
+                                  className="secondary-btn px-3 py-2 text-center text-xs"
+                                >
+                                  Review post
+                                </AppLink>
+                                {isWinner ? (
+                                  <span className="rounded-md bg-[#e8f0e8] px-3 py-2 text-xs font-black text-[#3d6b45]">
+                                    Winner
+                                  </span>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => announceChallengeWinner(challenge, entry)}
+                                    disabled={!canAnnounceWinner}
+                                    className="primary-btn px-3 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-50"
+                                    title={
+                                      canAnnounceWinner
+                                        ? "Announce this story as the winner"
+                                        : "Approve this story before announcing it as winner"
+                                    }
+                                  >
+                                    Announce winner
+                                  </button>
+                                )}
+                              </div>
                             </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     ) : (

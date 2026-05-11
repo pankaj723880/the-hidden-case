@@ -19,6 +19,8 @@ export default function ChallengeDetailPage({ challengeId }) {
   const [challenge, setChallenge] = useState(null);
   const [myPosts, setMyPosts] = useState([]);
   const [selectedPostId, setSelectedPostId] = useState("");
+  const [showNewEntryForm, setShowNewEntryForm] = useState(false);
+  const [newEntry, setNewEntry] = useState({ title: "", content: "" });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
@@ -103,6 +105,30 @@ export default function ChallengeDetailPage({ challengeId }) {
       await loadChallenge();
     } catch (err) {
       setError(err?.response?.data?.error || err?.message || "Failed to enter");
+    }
+  };
+
+  const submitNewEntry = async (event) => {
+    event.preventDefault();
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    setError("");
+    setMessage("");
+    try {
+      await api.post(`/api/challenges/${challengeId}/enter-new`, newEntry);
+      setNewEntry({ title: "", content: "" });
+      setShowNewEntryForm(false);
+      setMessage("Challenge story sent to admin review. It will only publish if admin approves it.");
+      await loadChallenge();
+    } catch (err) {
+      setError(
+        err?.response?.data?.error ||
+          err?.message ||
+          "Failed to create challenge entry",
+      );
     }
   };
 
@@ -196,12 +222,13 @@ export default function ChallengeDetailPage({ challengeId }) {
                   >
                     Enter
                   </button>
-                  <AppLink
-                    href={`/write?challenge=${challenge._id}`}
+                  <button
+                    type="button"
+                    onClick={() => setShowNewEntryForm((value) => !value)}
                     className="secondary-btn px-5 py-3 text-center"
                   >
-                    Write new
-                  </AppLink>
+                    Create new
+                  </button>
                 </div>
               ) : (
                 <p className="mt-4 text-[#6d6155]">
@@ -214,6 +241,80 @@ export default function ChallengeDetailPage({ challengeId }) {
               {message ? (
                 <p className="mt-3 text-sm font-semibold text-[#5f7263]">{message}</p>
               ) : null}
+              {showNewEntryForm ? (
+                <form
+                  onSubmit={submitNewEntry}
+                  className="mt-5 rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4"
+                >
+                  <div className="mb-4">
+                    <h3 className="serif-title text-2xl font-bold text-[#25211d]">
+                      Create a challenge-only story
+                    </h3>
+                    <p className="mt-1 text-sm leading-6 text-[#8b7f72]">
+                      This story goes to admin as a challenge entry. It will not appear publicly unless admin approves it for publishing.
+                    </p>
+                  </div>
+                  <label className="block text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+                    Title
+                    <input
+                      value={newEntry.title}
+                      onChange={(event) =>
+                        setNewEntry((current) => ({
+                          ...current,
+                          title: event.target.value,
+                        }))
+                      }
+                      className="field mt-1"
+                      placeholder="Story title"
+                      required
+                    />
+                  </label>
+                  <label className="mt-4 block text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+                    Story body
+                    <textarea
+                      value={newEntry.content}
+                      onChange={(event) =>
+                        setNewEntry((current) => ({
+                          ...current,
+                          content: event.target.value,
+                        }))
+                      }
+                      className="field mt-1 min-h-56 resize-y"
+                      placeholder="Write your challenge story..."
+                      required
+                    />
+                  </label>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <button type="submit" className="primary-btn px-5 py-3">
+                      Send to challenge review
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowNewEntryForm(false)}
+                      className="secondary-btn px-5 py-3"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+            </section>
+          ) : null}
+
+          {challenge.winner?.post ? (
+            <section className="paper-card mt-10 rounded-lg border-l-4 border-[var(--gold)] p-6">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8f5f35]">
+                Winner announced
+              </p>
+              <h2 className="serif-title mt-2 text-3xl font-bold text-[#25211d]">
+                {challenge.winner.post.title}
+              </h2>
+              <p className="mt-2 text-sm font-semibold text-[#8b7f72]">
+                By {challenge.winner.post.author?.name ?? challenge.winner.author?.name ?? "Unknown"}
+              </p>
+              <div className="mt-5 max-w-sm">
+                <PostCard post={challenge.winner.post} />
+              </div>
             </section>
           ) : null}
 

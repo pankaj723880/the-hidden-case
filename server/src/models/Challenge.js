@@ -14,6 +14,11 @@ export const challengeSchema = new Schema(
     },
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     entries: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    winner: {
+      post: { type: Schema.Types.ObjectId, ref: "Post", default: null },
+      author: { type: Schema.Types.ObjectId, ref: "User", default: null },
+      selectedAt: { type: Date, default: null },
+    },
     votes: [
       {
         user: { type: Schema.Types.ObjectId, ref: "User", required: true },

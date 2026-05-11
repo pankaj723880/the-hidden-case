@@ -17,6 +17,7 @@ export default function HomePage() {
   const [trendingPosts, setTrendingPosts] = useState([]);
   const [featuredPosts, setFeaturedPosts] = useState([]);
   const [leaderboardUsers, setLeaderboardUsers] = useState([]);
+  const [challengeWinners, setChallengeWinners] = useState([]);
 
   useEffect(() => {
     const quoteTimer = window.setInterval(() => {
@@ -49,14 +50,16 @@ export default function HomePage() {
 
     void (async () => {
       try {
-        const [featuredRes, trendingRes, leaderboardRes] = await Promise.all([
+        const [featuredRes, trendingRes, leaderboardRes, winnersRes] = await Promise.all([
           api.get("/api/posts/featured"),
           api.get("/api/posts/trending"),
           api.get("/api/leaderboard"),
+          api.get("/api/challenges/winners"),
         ]);
         if (!cancelled) {
           setFeaturedPosts(featuredRes.data.posts ?? []);
           setTrendingPosts(trendingRes.data.posts ?? []);
+          setChallengeWinners(winnersRes.data.winners ?? []);
           setLeaderboardUsers(
             [...(leaderboardRes.data.users ?? [])]
               .sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0))
@@ -68,6 +71,7 @@ export default function HomePage() {
           setFeaturedPosts([]);
           setTrendingPosts([]);
           setLeaderboardUsers([]);
+          setChallengeWinners([]);
           setFeedPosts([]);
         }
       }
@@ -263,6 +267,42 @@ export default function HomePage() {
                 ))}
               </div>
             ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {challengeWinners.length > 0 ? (
+        <section className="editorial-shell py-10">
+          <div className="mb-6">
+            <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
+            <p className="text-xs uppercase tracking-[0.15rem]" style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}>
+              Challenge laurels
+            </p>
+            <h2 className="serif-title mt-2 text-4xl font-bold">
+              Challenge Winners
+            </h2>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {challengeWinners.slice(0, 3).map((challenge) => (
+              <article
+                key={challenge._id}
+                className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/80 p-4 shadow-[0_12px_35px_rgba(44,36,22,0.08)]"
+              >
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8f5f35]">
+                  {challenge.title}
+                </p>
+                <div className="mt-4">
+                  <PostCard post={challenge.winner.post} />
+                </div>
+                <p className="mt-3 text-xs font-semibold text-[#8b7f72]">
+                  Winner announced{" "}
+                  {challenge.winner.selectedAt
+                    ? new Date(challenge.winner.selectedAt).toLocaleDateString()
+                    : ""}
+                </p>
+              </article>
+            ))}
           </div>
         </section>
       ) : null}
