@@ -13,10 +13,25 @@ function toStatus(value) {
     : null;
 }
 
-function publicChallenge(challenge) {
+function publicChallenge(challenge, { includeEntrySummaries = false } = {}) {
+  const entries = challenge.entries ?? [];
+  const entrySummaries = includeEntrySummaries
+    ? entries
+        .filter((entry) => entry && typeof entry === "object")
+        .map((entry) => ({
+          _id: entry._id,
+          title: entry.title,
+          type: entry.type,
+          status: entry.status,
+          createdAt: entry.createdAt,
+          author: entry.author,
+        }))
+    : undefined;
+
   return {
     ...challenge,
-    entryCount: challenge.entries?.length ?? 0,
+    entryCount: entries.length,
+    ...(includeEntrySummaries ? { entrySummaries } : {}),
   };
 }
 
@@ -34,14 +49,26 @@ function entryWithVotes(entry, challenge, userId) {
   };
 }
 
-challengesRouter.get("/", async (_req, res) => {
-  const challenges = await ChallengeModel.find({})
+challengesRouter.get("/", optionalAuth, async (req, res) => {
+  const isAdmin = req.user?.role === "admin";
+  let query = ChallengeModel.find({})
     .populate("createdBy", "name")
-    .sort({ startDate: -1 })
-    .lean();
+    .sort({ startDate: -1 });
+
+  if (isAdmin) {
+    query = query.populate({
+      path: "entries",
+      select: "title type author status createdAt",
+      populate: { path: "author", select: "name avatar" },
+    });
+  }
+
+  const challenges = await query.lean();
 
   return res.json({
-    challenges: challenges.map(publicChallenge),
+    challenges: challenges.map((challenge) =>
+      publicChallenge(challenge, { includeEntrySummaries: isAdmin }),
+    ),
   });
 });
 

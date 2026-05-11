@@ -712,6 +712,40 @@ export default function AdminPage() {
                     <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#6d6155]">
                       {challenge.prompt}
                     </p>
+                    {challenge.entrySummaries?.length > 0 ? (
+                      <div className="mt-4 rounded-lg border border-[#ded2c1] bg-[#f7efe5] p-3">
+                        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8f5f35]">
+                          Applied users / submissions
+                        </p>
+                        <div className="mt-3 space-y-2">
+                          {challenge.entrySummaries.map((entry) => (
+                            <div
+                              key={entry._id}
+                              className="flex flex-col gap-2 rounded-md bg-[#fffaf2] p-3 sm:flex-row sm:items-center sm:justify-between"
+                            >
+                              <div className="min-w-0">
+                                <p className="truncate text-sm font-bold text-[#25211d]">
+                                  {entry.title}
+                                </p>
+                                <p className="mt-1 text-xs font-semibold text-[#8b7f72]">
+                                  By {entry.author?.name ?? "Unknown"} · {entry.status}
+                                </p>
+                              </div>
+                              <AppLink
+                                href={`/post/${entry._id}`}
+                                className="secondary-btn shrink-0 px-3 py-2 text-center text-xs"
+                              >
+                                Review post
+                              </AppLink>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="mt-4 rounded-lg border border-dashed border-[#ded2c1] bg-[#f7efe5] p-3 text-sm text-[#8b7f72]">
+                        No one has applied to this challenge yet.
+                      </p>
+                    )}
                     <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                       <select
                         value={challenge.status}
