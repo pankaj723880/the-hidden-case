@@ -370,21 +370,12 @@ export default function MessagesPage() {
   };
 
   if (isLoading) {
-    return <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] w-full overflow-hidden px-4 py-6 text-[#6d6155] sm:px-6 lg:top-[5rem] lg:px-8">Loading messages...</main>;
+    return <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] w-full overflow-hidden px-4 py-3 text-[#6d6155] sm:px-6 lg:top-[5rem] lg:px-8">Loading messages...</main>;
   }
 
   return (
-    <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] flex w-full flex-col overflow-hidden px-4 py-3 sm:px-6 lg:top-[5rem] lg:px-8">
-      <header className="mb-3 shrink-0">
-        <p className="text-[0.68rem] font-bold uppercase tracking-[0.24em] text-[#8f5f35]">
-          Direct messages
-        </p>
-        <h1 className="serif-title mt-0.5 text-3xl font-bold text-[#25211d] sm:text-4xl">
-          Messages
-        </h1>
-      </header>
-
-      <section className="grid min-h-0 flex-1 w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[340px_minmax(0,1fr)]">
+    <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] flex w-full flex-col overflow-hidden px-3 py-2 sm:px-5 lg:top-[5rem] lg:px-6">
+      <section className="grid min-h-0 flex-1 w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[310px_minmax(0,1fr)]">
         <aside className="hidden h-full overflow-hidden border-b border-[#ded2c1] lg:flex lg:flex-col lg:border-b-0 lg:border-r">
           <div className="border-b border-[#ded2c1] px-4 py-3">
             <p className="text-sm font-bold text-[#352a20]">Conversations</p>
@@ -502,7 +493,7 @@ export default function MessagesPage() {
                 </div>
               </div>
 
-              <div className={`${mobileView === "chat" ? "block" : "hidden"} flex-1 space-y-4 overflow-y-auto bg-[#f7efe5] p-4 sm:p-5 lg:block`}>
+              <div className={`${mobileView === "chat" ? "block" : "hidden"} flex-1 space-y-3 overflow-y-auto bg-[#f7efe5] p-3 sm:p-4 lg:block`}>
                 {isLoadingMessages ? (
                   <p className="text-sm text-[#8b7f72]">Loading conversation...</p>
                 ) : null}
@@ -514,7 +505,7 @@ export default function MessagesPage() {
                       className={`flex w-full ${isMine ? "justify-end" : "justify-start"}`}
                     >
                       <div
-                        className={`max-w-[82%] rounded-2xl px-4 py-3 shadow-sm sm:max-w-[70%] ${isMine ? "rounded-br-[4px]" : "rounded-bl-[4px]"}`}
+                        className={`max-w-[76%] rounded-xl px-3 py-2 shadow-sm sm:max-w-[56%] ${isMine ? "rounded-br-[4px]" : "rounded-bl-[4px]"}`}
                         style={{
                           backgroundColor: isMine ? "var(--accent)" : "#fffaf2",
                           color: isMine ? "#fff" : "#352a20",
@@ -522,12 +513,12 @@ export default function MessagesPage() {
                         }}
                       >
                         <p
-                          className="mb-1 text-[11px] font-black uppercase tracking-[0.12em]"
+                          className="mb-1 text-[10px] font-black uppercase tracking-[0.1em]"
                           style={{ color: isMine ? "rgba(255,255,255,0.72)" : "#8f5f35" }}
                         >
                           {isMine ? "You" : activeUser.name}
                         </p>
-                        <p className={`whitespace-pre-wrap text-sm leading-6 ${message.deleted ? "italic opacity-70" : ""}`}>
+                        <p className={`whitespace-pre-wrap text-[0.86rem] leading-5 ${message.deleted ? "italic opacity-70" : ""}`}>
                           {message.deleted ? "This message was deleted" : message.text}
                         </p>
                         {message.reactions?.length ? (
@@ -548,7 +539,7 @@ export default function MessagesPage() {
                           </div>
                         ) : null}
                         <p
-                          className="mt-1 text-right text-[11px] font-semibold"
+                          className="mt-1 text-right text-[10px] font-semibold"
                           style={{ color: isMine ? "rgba(255,255,255,0.72)" : "#8b7f72" }}
                         >
                           {new Date(message.createdAt).toLocaleTimeString([], {
@@ -557,7 +548,7 @@ export default function MessagesPage() {
                           })}
                         </p>
                         {!message.deleted ? (
-                          <div className={`mt-2 flex flex-wrap items-center gap-2 ${isMine ? "justify-end" : "justify-start"}`}>
+                          <div className={`mt-1 flex flex-wrap items-center gap-1.5 ${isMine ? "justify-end" : "justify-start"}`}>
                             <div className="relative" ref={reactionMenuMessageId === message._id ? popupLayerRef : null}>
                               <button
                                 type="button"
@@ -641,20 +632,20 @@ export default function MessagesPage() {
 
               <form
                 onSubmit={sendMessage}
-                className={`${mobileView === "chat" ? "flex" : "hidden"} sticky bottom-0 z-10 shrink-0 gap-3 border-t border-[#ded2c1] bg-[#fffaf2] p-4 lg:flex`}
+                className={`${mobileView === "chat" ? "flex" : "hidden"} sticky bottom-0 z-10 shrink-0 gap-2 border-t border-[#ded2c1] bg-[#fffaf2] p-3 lg:flex`}
               >
                 <textarea
                   value={draft}
                   maxLength={1000}
                   onChange={(event) => setDraft(event.target.value)}
-                  className="field min-h-12 flex-1 resize-none"
+                  className="field min-h-10 flex-1 resize-none py-2"
                   disabled={isBlocked}
                   placeholder={isBlocked ? "Unblock this user to send messages." : "Write a message..."}
                 />
                 <button
                   type="submit"
                   disabled={!draft.trim() || isSending || isBlocked}
-                  className="primary-btn px-5 py-2.5 disabled:opacity-60"
+                  className="primary-btn px-4 py-2 disabled:opacity-60"
                 >
                   Send
                 </button>
