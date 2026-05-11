@@ -131,6 +131,7 @@ export default function MessagesPage() {
   const [deleteMenuMessageId, setDeleteMenuMessageId] = useState("");
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [mobileView, setMobileView] = useState("list");
   const bottomRef = useRef(null);
   const chatMenuRef = useRef(null);
   const popupLayerRef = useRef(null);
@@ -153,6 +154,7 @@ export default function MessagesPage() {
     if (!nextUserId) return;
 
     setActiveUser(nextUser);
+    setMobileView("chat");
     setIsBlocked(
       blockedUserIds.includes(nextUserId) || isUserBlocked(user, nextUserId),
     );
@@ -200,7 +202,7 @@ export default function MessagesPage() {
             (conversation) => userIdOf(conversation.user) === queryUser,
           );
           await openConversation(existing?.user ?? queryUser);
-        } else if (loadedConversations[0]?.user) {
+        } else if (window.matchMedia("(min-width: 1024px)").matches && loadedConversations[0]?.user) {
           await openConversation(loadedConversations[0].user);
         }
       } catch {
@@ -356,6 +358,7 @@ export default function MessagesPage() {
         current.filter((conversation) => userIdOf(conversation.user) !== activeUserId),
       );
       setActiveUser(null);
+      setMobileView("list");
       setIsChatMenuOpen(false);
       toast.success("Chat deleted");
     } catch (err) {
@@ -406,34 +409,44 @@ export default function MessagesPage() {
         </aside>
 
         <section className="flex min-h-[68vh] min-w-0 flex-col">
-          <div className="border-b border-[#ded2c1] p-3 lg:hidden">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-[#8f5f35]">
-              Conversations
-            </p>
+          <div className={`${mobileView === "list" ? "block" : "hidden"} min-h-[68vh] lg:hidden`}>
+            <div className="border-b border-[#ded2c1] px-4 py-3">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8f5f35]">
+                Conversations
+              </p>
+              <p className="mt-1 text-sm text-[#8b7f72]">
+                Choose a user to open the chat.
+              </p>
+            </div>
             {conversations.length === 0 ? (
-              <p className="text-sm text-[#8b7f72]">
+              <p className="p-4 text-sm text-[#8b7f72]">
                 No messages yet. Open an author profile and send a message.
               </p>
-            ) : (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {conversations.map((conversation) => {
-                  const partnerId = userIdOf(conversation.user);
-                  return (
-                    <ConversationItem
-                      key={partnerId}
-                      conversation={conversation}
-                      isActive={partnerId === activeUserId}
-                      onOpen={openConversation}
-                      compact
-                    />
-                  );
-                })}
-              </div>
-            )}
+            ) : null}
+            <div>
+              {conversations.map((conversation) => {
+                const partnerId = userIdOf(conversation.user);
+                return (
+                  <ConversationItem
+                    key={partnerId}
+                    conversation={conversation}
+                    isActive={partnerId === activeUserId}
+                    onOpen={openConversation}
+                  />
+                );
+              })}
+            </div>
           </div>
           {activeUser ? (
             <>
-              <div className="flex flex-wrap items-center gap-3 border-b border-[#ded2c1] px-5 py-4">
+              <div className={`${mobileView === "chat" ? "flex" : "hidden"} flex-wrap items-center gap-3 border-b border-[#ded2c1] px-4 py-3 lg:flex lg:px-5 lg:py-4`}>
+                <button
+                  type="button"
+                  onClick={() => setMobileView("list")}
+                  className="secondary-btn px-3 py-2 text-sm lg:hidden"
+                >
+                  ← Chats
+                </button>
                 {activeUser.avatar ? (
                   <img
                     src={activeUser.avatar}
@@ -488,7 +501,7 @@ export default function MessagesPage() {
                 </div>
               </div>
 
-              <div className="flex-1 space-y-4 overflow-y-auto bg-[#f7efe5] p-4 sm:p-5">
+              <div className={`${mobileView === "chat" ? "block" : "hidden"} flex-1 space-y-4 overflow-y-auto bg-[#f7efe5] p-4 sm:p-5 lg:block`}>
                 {isLoadingMessages ? (
                   <p className="text-sm text-[#8b7f72]">Loading conversation...</p>
                 ) : null}
@@ -627,7 +640,7 @@ export default function MessagesPage() {
 
               <form
                 onSubmit={sendMessage}
-                className="flex gap-3 border-t border-[#ded2c1] p-4"
+                className={`${mobileView === "chat" ? "flex" : "hidden"} gap-3 border-t border-[#ded2c1] p-4 lg:flex`}
               >
                 <textarea
                   value={draft}
@@ -647,7 +660,7 @@ export default function MessagesPage() {
               </form>
             </>
           ) : (
-            <div className="flex flex-1 items-center justify-center p-8 text-center text-[#6d6155]">
+            <div className="hidden flex-1 items-center justify-center p-8 text-center text-[#6d6155] lg:flex">
               Select a conversation or open a user profile to start one.
             </div>
           )}
