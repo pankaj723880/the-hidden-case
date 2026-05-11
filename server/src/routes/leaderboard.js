@@ -5,16 +5,17 @@ import { monthStartDate, recalculateMonthlyLeaderboard } from "../utils/leaderbo
 import { getCache, setCache } from "../utils/cache.js";
 
 export const leaderboardRouter = Router();
+const LEADERBOARD_CACHE_KEY = "leaderboard:xp";
 
 leaderboardRouter.get("/", async (_req, res) => {
-  const cached = await getCache("leaderboard");
+  const cached = await getCache(LEADERBOARD_CACHE_KEY);
   if (cached) return res.json(cached);
   await recalculateMonthlyLeaderboard();
 
   const since = monthStartDate();
   const users = await UserModel.find({ role: { $ne: "admin" } })
-    .select("name avatar monthlyScore leaderboardBadge")
-    .sort({ monthlyScore: -1, name: 1 })
+    .select("name avatar xp level monthlyScore leaderboardBadge")
+    .sort({ xp: -1, name: 1 })
     .limit(10)
     .lean();
 
@@ -37,6 +38,6 @@ leaderboardRouter.get("/", async (_req, res) => {
       postsThisMonth: countByUser.get(String(user._id)) ?? 0,
     })),
   };
-  await setCache("leaderboard", payload, 600);
+  await setCache(LEADERBOARD_CACHE_KEY, payload, 600);
   return res.json(payload);
 });

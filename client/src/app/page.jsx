@@ -56,7 +56,11 @@ export default function HomePage() {
         if (!cancelled) {
           setFeaturedPosts(featuredRes.data.posts ?? []);
           setTrendingPosts(trendingRes.data.posts ?? []);
-          setLeaderboardUsers((leaderboardRes.data.users ?? []).slice(0, 3));
+          setLeaderboardUsers(
+            [...(leaderboardRes.data.users ?? [])]
+              .sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0))
+              .slice(0, 3),
+          );
         }
       } catch {
         if (!cancelled) {
@@ -303,7 +307,7 @@ export default function HomePage() {
                   <div>
                     <p className="font-bold text-[#25211d]">{writer.name}</p>
                     <p className="text-xs font-semibold text-[#8b7f72]">
-                      {writer.monthlyScore ?? 0} points
+                      {writer.xp ?? 0} XP
                     </p>
                   </div>
                 </AppLink>

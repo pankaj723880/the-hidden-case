@@ -37,7 +37,7 @@ function PodiumCard({ user, rank }) {
         {user.name}
       </h2>
       <p className="mt-1 text-sm font-bold text-[#8b7f72]">
-        {user.monthlyScore ?? 0} points
+        {user.xp ?? 0} XP
       </p>
       <p className="mt-1 text-xs text-[#8b7f72]">
         {user.postsThisMonth ?? 0} posts this month
@@ -72,7 +72,8 @@ export default function LeaderboardPage() {
     };
   }, []);
 
-  const topThree = users.slice(0, 3);
+  const rankedUsers = [...users].sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0));
+  const topThree = rankedUsers.slice(0, 3);
   const podium = [topThree[1], topThree[0], topThree[2]];
 
   return (
@@ -82,10 +83,10 @@ export default function LeaderboardPage() {
           Author rankings
         </p>
         <h1 className="serif-title mt-2 text-5xl font-bold text-[#25211d]">
-          Monthly Leaderboard
+          XP Leaderboard
         </h1>
         <p className="mt-3 text-lg text-[#6d6155]">
-          Resets on the 1st of each month
+          Ranked by total author XP
         </p>
       </header>
 
@@ -106,7 +107,7 @@ export default function LeaderboardPage() {
           Ranked Authors
         </h2>
         <div className="mt-5 space-y-3">
-          {users.slice(3).map((user, index) => (
+          {rankedUsers.slice(3).map((user, index) => (
             <AppLink
               key={user._id}
               href={`/profile/${user._id}`}
@@ -120,13 +121,13 @@ export default function LeaderboardPage() {
                 <span className="font-bold text-[#25211d]">{user.name}</span>
               </div>
               <span className="font-bold text-[#6d6155]">
-                {user.monthlyScore ?? 0}
+                {user.xp ?? 0} XP
               </span>
             </AppLink>
           ))}
           {users.length <= 3 ? (
             <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4 text-[#6d6155]">
-              More ranked authors will appear as posts gain activity.
+              More ranked authors will appear as writers earn XP.
             </p>
           ) : null}
         </div>
