@@ -32,7 +32,7 @@ function signAccessToken(user) {
       email: user.email,
     },
     env.JWT_SECRET,
-    { expiresIn: "15m" },
+    { expiresIn: "7d" },
   );
 }
 
@@ -75,7 +75,8 @@ async function issueSession(req, res, user) {
   user.refreshToken = refreshToken;
   await user.save();
 
-  const isCrossSiteClient = /^https:\/\//i.test(env.CLIENT_URL);
+  const requestOrigin = String(req.get("origin") ?? env.CLIENT_URL ?? "");
+  const isCrossSiteClient = /^https:\/\//i.test(requestOrigin);
   const refreshCookieOptions = {
     httpOnly: true,
     secure: isCrossSiteClient || process.env.NODE_ENV === "production",
@@ -296,7 +297,8 @@ export async function logout(req, res) {
     }
   }
 
-  const isCrossSiteClient = /^https:\/\//i.test(env.CLIENT_URL);
+  const requestOrigin = String(req.get("origin") ?? env.CLIENT_URL ?? "");
+  const isCrossSiteClient = /^https:\/\//i.test(requestOrigin);
   res.clearCookie("refreshToken", {
     path: "/api/auth/refresh",
     secure: isCrossSiteClient || process.env.NODE_ENV === "production",

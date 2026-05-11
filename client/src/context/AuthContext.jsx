@@ -11,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import { api, setApiAccessToken } from "../lib/api";
 
 const AuthContext = createContext(undefined);
+const ACCESS_TOKEN_KEY = "thc-access-token";
 
 function decodeUserFromAccessToken(token) {
   try {
@@ -28,6 +29,24 @@ function decodeUserFromAccessToken(token) {
     };
   } catch {
     return null;
+  }
+}
+
+function isTokenUsable(token) {
+  try {
+    const decoded = jwtDecode(token);
+    const expiresAt = Number(decoded.exp ?? 0) * 1000;
+    return Boolean(decoded.sub || decoded.id) && expiresAt > Date.now() + 5000;
+  } catch {
+    return false;
+  }
+}
+
+function storeAccessToken(token) {
+  if (token) {
+    window.localStorage.setItem(ACCESS_TOKEN_KEY, token);
+  } else {
+    window.localStorage.removeItem(ACCESS_TOKEN_KEY);
   }
 }
 
@@ -56,6 +75,7 @@ export function AuthProvider({ children }) {
 
     setAccessToken(refreshedAccessToken);
     setApiAccessToken(refreshedAccessToken);
+    storeAccessToken(refreshedAccessToken);
     const decodedUser = decodeUserFromAccessToken(refreshedAccessToken);
     setUser(await fetchCurrentUserProfile(decodedUser));
   }, []);
@@ -70,6 +90,7 @@ export function AuthProvider({ children }) {
 
       setAccessToken(receivedAccessToken);
       setApiAccessToken(receivedAccessToken);
+      storeAccessToken(receivedAccessToken);
       const decodedUser = decodeUserFromAccessToken(receivedAccessToken);
       const profileUser = await fetchCurrentUserProfile(decodedUser);
       setUser(profileUser);
@@ -89,6 +110,7 @@ export function AuthProvider({ children }) {
 
       setAccessToken(receivedAccessToken);
       setApiAccessToken(receivedAccessToken);
+      storeAccessToken(receivedAccessToken);
       const decodedUser = decodeUserFromAccessToken(receivedAccessToken);
       const profileUser = await fetchCurrentUserProfile(decodedUser);
       setUser(profileUser);
@@ -109,6 +131,7 @@ export function AuthProvider({ children }) {
 
       setAccessToken(receivedAccessToken);
       setApiAccessToken(receivedAccessToken);
+      storeAccessToken(receivedAccessToken);
       const decodedUser = decodeUserFromAccessToken(receivedAccessToken);
       const profileUser = await fetchCurrentUserProfile(decodedUser);
       setUser(profileUser);
@@ -123,6 +146,7 @@ export function AuthProvider({ children }) {
     await api.post("/api/auth/logout");
     setAccessToken(null);
     setApiAccessToken(null);
+    storeAccessToken("");
     setUser(null);
     setIsLoading(false);
   }, []);
@@ -135,9 +159,19 @@ export function AuthProvider({ children }) {
     // refreshToken is httpOnly cookie; accessToken is held in-memory.
     void (async () => {
       try {
+        const savedAccessToken = window.localStorage.getItem(ACCESS_TOKEN_KEY);
+        if (savedAccessToken && isTokenUsable(savedAccessToken)) {
+          setAccessToken(savedAccessToken);
+          setApiAccessToken(savedAccessToken);
+          const decodedUser = decodeUserFromAccessToken(savedAccessToken);
+          setUser(await fetchCurrentUserProfile(decodedUser));
+          return;
+        }
+        storeAccessToken("");
         await refreshAccessTokenImpl();
       } catch {
         // ignore (user will remain unauthenticated)
+        storeAccessToken("");
       } finally {
         setIsLoading(false);
       }
