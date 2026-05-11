@@ -200,6 +200,59 @@ function classifySource(referrer) {
   return "unknown";
 }
 
+function decodeTranslationEntities(value) {
+  return String(value ?? "")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function chunkText(value, maxLength = 450) {
+  const text = String(value ?? "").trim();
+  if (text.length <= maxLength) return [text].filter(Boolean);
+
+  const chunks = [];
+  let remaining = text;
+  while (remaining.length > maxLength) {
+    const slice = remaining.slice(0, maxLength);
+    const breakAt = Math.max(
+      slice.lastIndexOf("\n"),
+      slice.lastIndexOf(". "),
+      slice.lastIndexOf("। "),
+      slice.lastIndexOf(" "),
+    );
+    const end = breakAt > 120 ? breakAt + 1 : maxLength;
+    chunks.push(remaining.slice(0, end).trim());
+    remaining = remaining.slice(end).trim();
+  }
+  if (remaining) chunks.push(remaining);
+  return chunks;
+}
+
+async function translateWithPublicFallback(text, sourceLanguage, targetLanguage) {
+  const translatedChunks = [];
+  for (const chunk of chunkText(text)) {
+    const url = new URL("https://api.mymemory.translated.net/get");
+    url.searchParams.set("q", chunk);
+    url.searchParams.set("langpair", `${sourceLanguage}|${targetLanguage}`);
+
+    const response = await fetch(url, {
+      headers: { Accept: "application/json" },
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || !data?.responseData?.translatedText) {
+      throw new Error(
+        data?.responseDetails || "Public translation fallback failed",
+      );
+    }
+    translatedChunks.push(decodeTranslationEntities(data.responseData.translatedText));
+  }
+
+  return translatedChunks.join("\n\n").trim();
+}
+
 const ALLOWED_CONTENT_WARNINGS = [
   "Violence",
   "Mature themes",
@@ -1202,13 +1255,24 @@ export async function translatePost(req, res) {
     const targetLanguage = cleanLanguage(req.body.targetLanguage);
     const post = await PostModel.findById(req.params.id).select("title content language");
     if (!post) return res.status(404).json({ error: "Post not found" });
-    if ((post.language ?? "en") === targetLanguage) {
+    const sourceLanguage = cleanLanguage(post.language ?? "en");
+    if (sourceLanguage === targetLanguage) {
       return res.json({ translatedContent: post.content.replace(/<[^>]+>/g, ""), targetLanguage });
     }
 
     const plainText = post.content.replace(/<[^>]+>/g, "").slice(0, 3000);
     const prompt = `Translate the following literary text from ${post.language ?? "en"} to ${targetLanguage}. Preserve the literary style, tone, and paragraph breaks. Return ONLY the translated text. No explanation. No preamble.\n\nText: ${plainText}`;
-    const translatedContent = await generateText(prompt, 1200);
+    let translatedContent = "";
+    try {
+      translatedContent = await generateText(prompt, 1200);
+    } catch (err) {
+      console.error("AI translation failed:", err?.message || err);
+      translatedContent = await translateWithPublicFallback(
+        plainText,
+        sourceLanguage,
+        targetLanguage,
+      );
+    }
     return res.json({ translatedContent, targetLanguage });
   } catch (err) {
     console.error("Translation failed:", err?.message || err);
