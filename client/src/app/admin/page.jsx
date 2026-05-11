@@ -881,7 +881,7 @@ export default function AdminPage() {
                             return (
                             <div
                               key={entry._id}
-                              className="flex flex-col gap-2 rounded-md bg-[#fffaf2] p-3 sm:flex-row sm:items-center sm:justify-between"
+                              className="grid gap-3 rounded-md bg-[#fffaf2] p-3"
                             >
                               <div className="min-w-0">
                                 <p className="truncate text-sm font-bold text-[#25211d]">
@@ -891,7 +891,7 @@ export default function AdminPage() {
                                   By {entry.author?.name ?? "Unknown"} · {entry.status}
                                 </p>
                               </div>
-                              <div className="flex shrink-0 flex-wrap gap-2">
+                              <div className="grid gap-2 sm:grid-cols-2">
                                 <AppLink
                                   href={`/post/${entry._id}`}
                                   className="secondary-btn px-3 py-2 text-center text-xs"
@@ -899,7 +899,7 @@ export default function AdminPage() {
                                   Review post
                                 </AppLink>
                                 {isWinner ? (
-                                  <span className="rounded-md bg-[#e8f0e8] px-3 py-2 text-xs font-black text-[#3d6b45]">
+                                  <span className="rounded-md bg-[#e8f0e8] px-3 py-2 text-center text-xs font-black text-[#3d6b45]">
                                     Winner
                                   </span>
                                 ) : (
