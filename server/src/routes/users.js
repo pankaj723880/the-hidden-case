@@ -10,7 +10,7 @@ import { MessageModel } from "../models/Message.js";
 import { KudosModel } from "../models/Kudos.js";
 import bcrypt from "bcryptjs";
 import { getEffectiveRole } from "../config/admin.js";
-import { imageUpload } from "../middleware/upload.js";
+import { imageUpload, isCloudinaryConfigured, uploadBufferToCloudinary } from "../middleware/upload.js";
 import { createNotification } from "../utils/notify.js";
 import { checkBadges } from "../utils/checkBadges.js";
 import { awardXP } from "../utils/xp.js";
@@ -100,11 +100,24 @@ usersRouter.post(
   async (req, res) => {
     const file = req.file;
     if (!file) return res.status(400).json({ error: "Missing uploaded image" });
+    if (!isCloudinaryConfigured) {
+      return res.status(501).json({ error: "Cloudinary upload not configured" });
+    }
 
     const user = await UserModel.findById(req.user.id);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    user.avatar = `${req.protocol}://${req.get("host")}/uploads/${file.filename}`;
+    const uploadResult = await uploadBufferToCloudinary(file.buffer, {
+      folder: "hidden-case-avatars",
+      resource_type: "image",
+      allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    });
+    const secureUrl = uploadResult?.secure_url ?? "";
+    if (!secureUrl) {
+      return res.status(500).json({ error: "Cloudinary did not return a URL" });
+    }
+
+    user.avatar = secureUrl;
     await user.save();
 
     return res.json({ user: toPublicUser(user) });

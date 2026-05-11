@@ -808,13 +808,37 @@ export async function createPendingPost(req, res) {
 }
 
 export async function uploadPostMedia(req, res) {
+  if (!requireCloudinaryConfigured()) {
+    return res.status(501).json({ error: "Cloudinary upload not configured" });
+  }
+
   const files = req.files ?? {};
   const image = files.image?.[0];
   const video = files.video?.[0];
+  let coverImage = "";
+  let videoUrl = "";
+
+  if (image) {
+    const uploadResult = await uploadBufferToCloudinary(image.buffer, {
+      folder: "hidden-case-covers",
+      resource_type: "image",
+      allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    });
+    coverImage = uploadResult?.secure_url ?? "";
+  }
+
+  if (video) {
+    const uploadResult = await uploadBufferToCloudinary(video.buffer, {
+      folder: "hidden-case-videos",
+      resource_type: "video",
+      allowed_formats: ["mp4", "webm", "mov"],
+    });
+    videoUrl = uploadResult?.secure_url ?? "";
+  }
 
   return res.json({
-    coverImage: image ? `${req.protocol}://${req.get("host")}/uploads/${image.filename}` : "",
-    videoUrl: video ? `${req.protocol}://${req.get("host")}/uploads/${video.filename}` : "",
+    coverImage,
+    videoUrl,
   });
 }
 
