@@ -370,11 +370,11 @@ export default function MessagesPage() {
   };
 
   if (isLoading) {
-    return <main className="h-[calc(100vh-7.5rem)] w-full overflow-hidden px-4 py-6 text-[#6d6155] sm:px-6 lg:h-[calc(100vh-5rem)] lg:px-8">Loading messages...</main>;
+    return <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] w-full overflow-hidden px-4 py-6 text-[#6d6155] sm:px-6 lg:top-[5rem] lg:px-8">Loading messages...</main>;
   }
 
   return (
-    <main className="flex h-[calc(100vh-7.5rem)] w-full flex-col overflow-hidden px-4 py-4 sm:px-6 lg:h-[calc(100vh-5rem)] lg:px-8">
+    <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] flex w-full flex-col overflow-hidden px-4 py-4 sm:px-6 lg:top-[5rem] lg:px-8">
       <header className="mb-4 shrink-0">
         <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
           Direct messages
