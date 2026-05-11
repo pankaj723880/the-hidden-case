@@ -370,11 +370,11 @@ export default function MessagesPage() {
   };
 
   if (isLoading) {
-    return <main className="editorial-shell py-12 text-[#6d6155]">Loading messages...</main>;
+    return <main className="w-full px-4 py-12 text-[#6d6155] sm:px-6 lg:px-8">Loading messages...</main>;
   }
 
   return (
-    <main className="editorial-shell py-10">
+    <main className="w-full px-4 py-8 sm:px-6 lg:px-8">
       <header className="mb-6">
         <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
           Direct messages
@@ -384,12 +384,12 @@ export default function MessagesPage() {
         </h1>
       </header>
 
-      <section className="grid min-h-[68vh] overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[280px_1fr]">
+      <section className="grid min-h-[calc(100vh-13rem)] w-full overflow-hidden rounded-lg border border-[#ded2c1] bg-[#fffaf2] lg:grid-cols-[340px_minmax(0,1fr)]">
         <aside className="hidden border-b border-[#ded2c1] lg:block lg:border-b-0 lg:border-r">
           <div className="border-b border-[#ded2c1] px-4 py-3">
             <p className="text-sm font-bold text-[#352a20]">Conversations</p>
           </div>
-          <div className="max-h-[68vh] overflow-y-auto">
+          <div className="max-h-[calc(100vh-16rem)] overflow-y-auto">
             {conversations.length === 0 ? (
               <p className="p-4 text-sm text-[#8b7f72]">
                 No messages yet. Open an author profile and send a message.
@@ -409,8 +409,8 @@ export default function MessagesPage() {
           </div>
         </aside>
 
-        <section className="flex min-h-[68vh] min-w-0 flex-col">
-          <div className={`${mobileView === "list" ? "block" : "hidden"} min-h-[68vh] lg:hidden`}>
+        <section className="flex min-h-[calc(100vh-13rem)] min-w-0 flex-col">
+          <div className={`${mobileView === "list" ? "block" : "hidden"} min-h-[calc(100vh-13rem)] lg:hidden`}>
             <div className="border-b border-[#ded2c1] px-4 py-3">
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8f5f35]">
                 Conversations
