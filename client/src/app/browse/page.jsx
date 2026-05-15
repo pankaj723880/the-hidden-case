@@ -12,7 +12,10 @@ const PAGE_SIZE = 9;
 function LoadingSpinner() {
   return (
     <div className="flex justify-center py-8">
-      <div className="h-9 w-9 animate-spin rounded-full border-4 border-[var(--border2)] border-t-[var(--accent)]" />
+      <div
+        className="h-9 w-9 animate-spin rounded-full border-4 border-t-transparent"
+        style={{ borderColor: "var(--border2)", borderTopColor: "var(--accent)" }}
+      />
     </div>
   );
 }
@@ -150,110 +153,179 @@ export default function BrowsePage() {
   };
 
   return (
-    <main className="editorial-shell py-12">
-      <header className="mb-9 flex flex-col justify-between gap-5 border-b pb-8 md:flex-row md:items-end" style={{ borderColor: "var(--border)" }}>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.15rem]" style={{ color: "var(--text3)" }}>
-            Library
-          </p>
-          <h1 className="serif-title mt-2 text-5xl font-bold">
-            BROWSE
-          </h1>
-          <p className="mt-3 max-w-2xl text-[0.88rem]" style={{ color: "var(--text3)" }}>
-            {posts.length} stories and blogs
-          </p>
-        </div>
-        {user?.role !== "admin" ? (
-          <AppLink href="/write" className="secondary-btn px-5 py-3">
-            Submit your work
-          </AppLink>
-        ) : null}
-      </header>
-
-      <SearchPanel onSearch={handleSearch} />
-
-      <div className="mb-6 flex flex-wrap gap-2">
-        <select
-          value={filters.language || ""}
-          onChange={(event) => setLanguageFilter(event.target.value)}
-          className="field max-w-[12rem]"
-        >
-          <option value="">All languages</option>
-          {LANGUAGES.map((item) => (
-            <option key={item.code} value={item.code}>
-              {item.nativeName}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
-          onClick={() => setMoodFilter("")}
-          className="rounded-md border px-3 py-1.5 text-xs font-semibold transition"
+    <main>
+      {/* Hero — Cinematic Archive */}
+      <section
+        className="relative overflow-hidden px-8 py-20 sm:py-28"
+        style={{
+          background: "linear-gradient(180deg, #0a0a0a 0%, #1a0f0f 40%, #1f1515 70%, #0d0d0d 100%)",
+        }}
+      >
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
-            borderColor: filters.mood ? "var(--border)" : "var(--accent)",
-            backgroundColor: filters.mood ? "transparent" : "var(--accent)",
-            color: filters.mood ? "var(--text2)" : "#fff",
+            width: "600px",
+            height: "400px",
+            background: "radial-gradient(ellipse, rgba(192,57,43,0.06) 0%, transparent 70%)",
           }}
-        >
-          All moods
-        </button>
-        {MOODS.map((mood) => (
-          <button
-            key={mood}
-            type="button"
-            onClick={() => setMoodFilter(mood)}
-            className="rounded-md border px-3 py-1.5 text-xs font-semibold capitalize transition"
+        />
+        <div className="editorial-shell relative z-10 text-center">
+          <span
+            className="inline-block rounded-md border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em]"
             style={{
-              borderColor: filters.mood === mood ? "var(--accent)" : "var(--border)",
-              backgroundColor: filters.mood === mood ? "var(--accent)" : "transparent",
-              color: filters.mood === mood ? "#fff" : "var(--text2)",
+              borderColor: "var(--accent)",
+              backgroundColor: "rgba(192,57,43,0.1)",
+              color: "var(--accent2)",
             }}
           >
-            {mood}
-          </button>
-        ))}
-      </div>
+            CLASSIFIED ARCHIVE
+          </span>
+          <h1
+            className="mx-auto mt-5 max-w-3xl text-[2.5rem] leading-none sm:text-[4rem]"
+            style={{
+              color: "#fff",
+              fontFamily: "var(--font-bebas), sans-serif",
+              letterSpacing: "0.05em",
+            }}
+          >
+            BROWSE THE CASE FILES
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-sm" style={{ color: "var(--text2)" }}>
+            Search through {posts.length > 0 ? `${posts.length}+` : ""} documented cases of unsolved mysteries,
+            true crime, and paranormal encounters.
+          </p>
 
-      {error ? <p className="mb-6 text-sm font-semibold" style={{ color: "var(--accent2)" }}>{error}</p> : null}
-
-      <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <article key={i} className="card h-72 animate-pulse rounded-xl p-6">
-                <div className="mb-5 h-32 rounded-lg" style={{ backgroundColor: "var(--bg4)" }} />
-                <div className="h-5 w-3/4 rounded" style={{ backgroundColor: "var(--bg3)" }} />
-                <div className="mt-4 space-y-2">
-                  <div className="h-3 rounded" style={{ backgroundColor: "var(--bg4)" }} />
-                  <div className="h-3 w-5/6 rounded" style={{ backgroundColor: "var(--bg4)" }} />
-                </div>
-              </article>
-            ))
-          : posts.map((post) => (
-              <PostCard
-                key={post._id}
-                post={post}
-                onLike={handleLike}
-                onShare={handleShare}
-                sharedPostId={sharedPostId}
-              />
-            ))}
+          {user?.role !== "admin" ? (
+            <AppLink
+              href="/write"
+              className="primary-btn mt-6 inline-flex px-6 py-3 hover:no-underline"
+            >
+              Submit New Evidence
+            </AppLink>
+          ) : null}
+        </div>
       </section>
 
-      <div ref={sentinelRef} className="h-1" />
+      <div className="editorial-shell py-10">
+        {/* Search & Filters */}
+        <SearchPanel onSearch={handleSearch} />
 
-      {loadingMore ? <LoadingSpinner /> : null}
+        <div className="mb-8 flex flex-wrap gap-2">
+          <select
+            value={filters.language || ""}
+            onChange={(event) => setLanguageFilter(event.target.value)}
+            className="field max-w-[12rem]"
+          >
+            <option value="">All languages</option>
+            {LANGUAGES.map((item) => (
+              <option key={item.code} value={item.code}>
+                {item.nativeName}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => setMoodFilter("")}
+            className="rounded-md border px-3 py-1.5 text-xs font-semibold transition"
+            style={{
+              borderColor: filters.mood ? "var(--border)" : "var(--accent)",
+              backgroundColor: filters.mood ? "transparent" : "var(--accent)",
+              color: filters.mood ? "var(--text2)" : "#fff",
+            }}
+          >
+            All moods
+          </button>
+          {MOODS.map((mood) => (
+            <button
+              key={mood}
+              type="button"
+              onClick={() => setMoodFilter(mood)}
+              className="rounded-md border px-3 py-1.5 text-xs font-semibold capitalize transition"
+              style={{
+                borderColor: filters.mood === mood ? "var(--accent)" : "var(--border)",
+                backgroundColor: filters.mood === mood ? "var(--accent)" : "transparent",
+                color: filters.mood === mood ? "#fff" : "var(--text2)",
+              }}
+            >
+              {mood}
+            </button>
+          ))}
+        </div>
 
-      {!loading && posts.length === 0 ? (
-        <p className="card mt-10 rounded-xl p-6 text-center" style={{ color: "var(--text3)" }}>
-          📜 No posts found
-        </p>
-      ) : null}
+        {error ? (
+          <p className="mb-6 text-sm font-semibold" style={{ color: "var(--accent2)" }}>
+            {error}
+          </p>
+        ) : null}
 
-      {!hasMore && posts.length > 0 ? (
-        <p className="mt-10 text-center text-sm font-semibold" style={{ color: "var(--text3)" }}>
-          You&apos;ve reached the end
-        </p>
-      ) : null}
+        {/* Case File Grid */}
+        <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {loading
+            ? Array.from({ length: 6 }).map((_, i) => (
+                <article
+                  key={i}
+                  className="h-80 animate-pulse rounded-xl border p-6"
+                  style={{ borderColor: "var(--border)", backgroundColor: "var(--bg2)" }}
+                >
+                  <div className="mb-5 h-36 rounded-lg" style={{ backgroundColor: "var(--bg4)" }} />
+                  <div className="h-5 w-3/4 rounded" style={{ backgroundColor: "var(--bg3)" }} />
+                  <div className="mt-4 space-y-2">
+                    <div className="h-3 rounded" style={{ backgroundColor: "var(--bg4)" }} />
+                    <div className="h-3 w-5/6 rounded" style={{ backgroundColor: "var(--bg4)" }} />
+                  </div>
+                </article>
+              ))
+            : posts.map((post) => (
+                <PostCard
+                  key={post._id}
+                  post={post}
+                  onLike={handleLike}
+                  onShare={handleShare}
+                  sharedPostId={sharedPostId}
+                />
+              ))}
+        </section>
+
+        <div ref={sentinelRef} className="h-1" />
+
+        {loadingMore ? <LoadingSpinner /> : null}
+
+        {!loading && posts.length === 0 ? (
+          <div
+            className="mt-10 rounded-xl border p-8 text-center"
+            style={{ borderColor: "var(--border)", backgroundColor: "var(--bg2)" }}
+          >
+            <p
+              className="text-xl font-bold tracking-wider"
+              style={{ fontFamily: "var(--font-bebas), sans-serif", color: "var(--ink)" }}
+            >
+              NO CASES FOUND
+            </p>
+            <p className="mt-2 text-sm" style={{ color: "var(--text3)" }}>
+              Try adjusting your search filters or browse all cases.
+            </p>
+          </div>
+        ) : null}
+
+        {!hasMore && posts.length > 0 ? (
+          <p
+            className="mt-10 text-center text-sm font-bold uppercase tracking-[0.2em]"
+            style={{ color: "var(--text3)" }}
+          >
+            — END OF ARCHIVE —
+          </p>
+        ) : null}
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t py-8 text-center" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-center gap-6">
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="Facebook">⬤</a>
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="Instagram">⬤</a>
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="YouTube">⬤</a>
+        </div>
+        <p className="mt-4 text-xs" style={{ color: "var(--text3)" }}>© 2026 The Hidden Case. All rights reserved.</p>
+      </footer>
     </main>
   );
 }

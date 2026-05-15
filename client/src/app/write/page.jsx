@@ -776,13 +776,13 @@ export default function WritePage() {
     return (
       <main className="editorial-shell py-12">
         <section className="paper-card mx-auto max-w-2xl rounded-lg p-8 text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
+          <p className="text-xs font-bold uppercase tracking-[0.26em] text-[var(--accent2)]">
             Admin account
           </p>
-          <h1 className="serif-title mt-3 text-4xl font-bold text-[#25211d]">
+          <h1 className="serif-title mt-3 text-4xl font-bold text-[var(--ink)]">
             Admins cannot post stories or blogs.
           </h1>
-          <p className="mt-4 text-[#6d6155]">
+          <p className="mt-4 text-[var(--text2)]">
             Use the admin panel to review, approve, feature, or moderate user
             content.
           </p>
@@ -804,24 +804,213 @@ export default function WritePage() {
   const canUseFocusMode = templateSelected || draftId || editingMode;
 
   return (
-    <main className="editorial-shell grid gap-8 py-12 lg:grid-cols-[0.78fr_1.22fr]">
-      <aside className="write-chrome lg:pt-8">
-        <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
-          Writer desk
-        </p>
-        <h1 className="serif-title mt-3 text-5xl font-bold leading-tight text-[#25211d]">
-          {editingMode
-            ? "Refine your posted piece."
-            : "Shape your draft into a story worth reading."}
-        </h1>
-        <p className="mt-5 text-lg leading-8 text-[#6d6155]">
-          {editingMode
-            ? "Update your story or blog, then send the revised version for review."
-            : "Add a title, choose story or blog, attach an image or video from your system, then send it for review."}
-        </p>
-      </aside>
+    <main>
+      {/* Hero — dark misty forest atmosphere */}
+      <section
+        className="write-chrome relative overflow-hidden px-8 py-20 sm:py-28"
+        style={{
+          background: "linear-gradient(180deg, #0a0a0a 0%, #1a0f0f 40%, #2a1515 70%, #0d0d0d 100%)",
+        }}
+      >
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{
+            width: "500px",
+            height: "350px",
+            background: "radial-gradient(ellipse, rgba(192,57,43,0.06) 0%, transparent 70%)",
+          }}
+        />
+        <div className="editorial-shell relative z-10">
+          <h1
+            className="max-w-2xl text-[2.5rem] leading-none sm:text-[3.5rem]"
+            style={{ color: "#fff", fontFamily: "var(--font-bebas), sans-serif", letterSpacing: "0.05em" }}
+          >
+            <span style={{ color: "var(--accent2)" }}>UNSOLVED MYSTERIES</span>
+            <br />
+            HIDDEN FROM THE WORLD
+          </h1>
+          <p className="mt-4 max-w-lg text-sm" style={{ color: "var(--text2)" }}>
+            {editingMode
+              ? "Update your story or blog, then send the revised version for review."
+              : "Explore true crime, paranormal, and unsolved stories that demand to be uncovered."}
+          </p>
+          <button
+            type="button"
+            onClick={() => document.getElementById("case-editor")?.scrollIntoView({ behavior: "smooth" })}
+            className="mt-6 rounded-md border px-5 py-2.5 text-sm font-semibold transition hover:bg-white/5"
+            style={{ borderColor: "var(--border2)", color: "var(--text)" }}
+          >
+            Start Exploring
+          </button>
+        </div>
+      </section>
 
-      <section className="write-editor-area paper-card rounded-lg p-6 sm:p-8">
+      {/* CLASSIFIED editor section */}
+      <div id="case-editor" className="editorial-shell py-12">
+        <div className="mb-6">
+          <span
+            className="inline-block rounded-md border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em]"
+            style={{ borderColor: "var(--accent)", backgroundColor: "rgba(192,57,43,0.1)", color: "var(--accent2)" }}
+          >
+            CLASSIFIED
+          </span>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
+          {/* LEFT: Evidence Upload */}
+          <aside className="write-chrome space-y-6">
+            <div
+              className="rounded-xl border p-5"
+              style={{
+                borderColor: "var(--border)",
+                backgroundColor: "var(--bg2)",
+                boxShadow: "0 0 25px rgba(192,57,43,0.08)",
+              }}
+            >
+              <h2
+                className="text-xl font-bold tracking-wider"
+                style={{ fontFamily: "var(--font-bebas), sans-serif", color: "var(--ink)" }}
+              >
+                EVIDENCE UPLOAD
+              </h2>
+
+              {/* Cover image upload */}
+              <div className="mt-5">
+                <label className="block">
+                  <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Cover image</span>
+                  <div
+                    className="mt-2 flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 text-center transition hover:border-[var(--accent)]"
+                    style={{ borderColor: "var(--border2)", backgroundColor: "var(--bg3)" }}
+                    onClick={() => document.getElementById("cover-image-input")?.click()}
+                  >
+                    <span className="text-2xl">↑</span>
+                    <p className="mt-2 text-xs" style={{ color: "var(--text3)" }}>
+                      Drag and drop zone<br />to all/ext here
+                    </p>
+                  </div>
+                  <input
+                    id="cover-image-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => {
+                      setImageFile(event.target.files?.[0] ?? null);
+                      setGeneratedCoverUrl("");
+                    }}
+                    className="hidden"
+                  />
+                </label>
+
+                {/* Uploaded file indicators */}
+                {imageFile ? (
+                  <div
+                    className="mt-3 flex items-center justify-between rounded-md border px-3 py-2"
+                    style={{ borderColor: "var(--accent)", backgroundColor: "rgba(192,57,43,0.08)" }}
+                  >
+                    <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: "var(--text)" }}>
+                      📷 {imageFile.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setImageFile(null)}
+                      className="text-sm font-bold"
+                      style={{ color: "var(--accent2)" }}
+                    >
+                      ■
+                    </button>
+                  </div>
+                ) : null}
+
+                {videoFile ? (
+                  <div
+                    className="mt-2 flex items-center justify-between rounded-md border px-3 py-2"
+                    style={{ borderColor: "var(--accent)", backgroundColor: "rgba(192,57,43,0.08)" }}
+                  >
+                    <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: "var(--text)" }}>
+                      🎬 {videoFile.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setVideoFile(null)}
+                      className="text-sm font-bold"
+                      style={{ color: "var(--accent2)" }}
+                    >
+                      ■
+                    </button>
+                  </div>
+                ) : null}
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleGenerateCover}
+                    disabled={generatingCover || !title.trim()}
+                    className="secondary-btn px-3 py-2 text-xs disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {generatingCover ? "Generating..." : "Generate with AI"}
+                  </button>
+                </div>
+
+                {(generatedCoverUrl || coverImage) && !imageFile ? (
+                  <div className="mt-3 overflow-hidden rounded-md border" style={{ borderColor: "var(--border)" }}>
+                    <img
+                      src={getMediaUrl(generatedCoverUrl || coverImage)}
+                      alt="Cover preview"
+                      className="max-h-48 w-full object-contain"
+                      style={{ filter: "none" }}
+                    />
+                  </div>
+                ) : null}
+              </div>
+
+              {/* Video upload */}
+              <div className="mt-5">
+                <label className="block">
+                  <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Video</span>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={(event) => setVideoFile(event.target.files?.[0] ?? null)}
+                    className="field mt-2 text-xs"
+                  />
+                </label>
+              </div>
+            </div>
+
+            {/* Case Files list */}
+            {(imageFile || videoFile || coverImage) ? (
+              <div
+                className="rounded-xl border p-5"
+                style={{ borderColor: "var(--border)", backgroundColor: "var(--bg2)" }}
+              >
+                <h3
+                  className="text-lg font-bold tracking-wider"
+                  style={{ fontFamily: "var(--font-bebas), sans-serif", color: "var(--ink)" }}
+                >
+                  CASE FILES
+                </h3>
+                <div className="mt-3 space-y-2">
+                  {imageFile ? (
+                    <p className="text-xs" style={{ color: "var(--text2)" }}>{imageFile.name}</p>
+                  ) : coverImage ? (
+                    <p className="text-xs" style={{ color: "var(--text2)" }}>Cover_Image.jpg</p>
+                  ) : null}
+                  {videoFile ? (
+                    <p className="text-xs" style={{ color: "var(--text2)" }}>{videoFile.name}</p>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+          </aside>
+
+          {/* RIGHT: Editor area */}
+          <section
+            className="write-editor-area rounded-xl border p-6 sm:p-8"
+            style={{
+              borderColor: "var(--border)",
+              backgroundColor: "var(--bg2)",
+              boxShadow: "0 0 30px rgba(192,57,43,0.08), 0 4px 24px rgba(0,0,0,0.3)",
+            }}
+          >
         {focusMode ? (
           <button
             type="button"
@@ -832,7 +1021,7 @@ export default function WritePage() {
           </button>
         ) : null}
         {!isLoading && !isAuthenticated ? (
-          <div className="write-chrome mb-6 rounded-md border border-[#d8cab8] bg-[#ead9c7]/60 px-4 py-3 text-sm font-semibold text-[#5a3a22]">
+          <div className="write-chrome mb-6 rounded-md border border-[var(--border)] bg-[var(--bg4)] px-4 py-3 text-sm font-semibold text-[var(--text2)]">
             Login is required only when you want to write or submit.
           </div>
         ) : null}
@@ -860,7 +1049,7 @@ export default function WritePage() {
                   Focus mode
                 </button>
               ) : null}
-              <p className="text-right text-xs font-semibold text-[#8b7f72]">
+              <p className="text-right text-xs font-semibold text-[var(--text3)]">
                 {autoSaveStatus === "saving" ? "Saving..." : null}
                 {autoSaveStatus === "saved" && lastSavedAt
                   ? `${editingMode ? "Changes saved" : "Draft saved"} ${lastSavedAt.toLocaleTimeString()}`
@@ -872,7 +1061,7 @@ export default function WritePage() {
           {!templateSelected && !draftId && !editingMode ? (
             <div className="write-chrome contents">
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">
+                <span className="text-sm font-bold text-[var(--text)]">
                   What are you writing?
                 </span>
                 <select
@@ -885,7 +1074,7 @@ export default function WritePage() {
                 </select>
               </label>
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">Language</span>
+                <span className="text-sm font-bold text-[var(--text)]">Language</span>
                 <select
                   value={language}
                   onChange={(event) => setLanguage(event.target.value)}
@@ -908,18 +1097,18 @@ export default function WritePage() {
           {templateSelected || draftId || editingMode ? (
             <>
           <label className="write-title-field block">
-            <span className="text-sm font-bold text-[#352a20]">Title</span>
+            <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Case Title</span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               className="field mt-2"
-              placeholder="Give your piece a clear title"
+              placeholder="Case Title"
               required
             />
           </label>
 
           <label className="write-chrome block">
-            <span className="text-sm font-bold text-[#352a20]">Format</span>
+            <span className="text-sm font-bold text-[var(--text)]">Format</span>
             <select
               value={type}
               onChange={(event) => setType(event.target.value)}
@@ -930,8 +1119,8 @@ export default function WritePage() {
             </select>
           </label>
 
-          <section className="write-chrome rounded-lg border border-[#ded2c1] bg-[#fffaf2]/55 p-4">
-            <label className="flex items-center gap-3 text-sm font-bold text-[#352a20]">
+          <section className="write-chrome rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-4">
+            <label className="flex items-center gap-3 text-sm font-bold text-[var(--text)]">
               <input
                 type="checkbox"
                 checked={multiChapterMode}
@@ -939,16 +1128,16 @@ export default function WritePage() {
               />
               Multi-chapter mode
             </label>
-            <p className="mt-2 text-xs text-[#8b7f72]">
+            <p className="mt-2 text-xs text-[var(--text3)]">
               Split this story into chapters readers can navigate one at a time.
             </p>
           </section>
 
           {!multiChapterMode ? (
           <label className="write-body-field block">
-            <span className="text-sm font-bold text-[#352a20]">Body</span>
-            <div className="mt-2 overflow-hidden rounded-md border border-[#ded2c1]">
-              <div className="write-editor-toolbar border-b border-[#ded2c1]">
+            <span className="text-sm font-bold text-[var(--text)]">Body</span>
+            <div className="mt-2 overflow-hidden rounded-md border border-[var(--border)]">
+              <div className="write-editor-toolbar border-b border-[var(--border)]">
                 <AIAssistant
                   content={content}
                   onInsert={(text) =>
@@ -957,7 +1146,7 @@ export default function WritePage() {
                     )
                   }
                 />
-                <div className="flex justify-end bg-[#fffaf2]/70 px-3 py-2">
+                <div className="flex justify-end bg-[var(--bg3)] px-3 py-2">
                   <input
                     ref={inlineImageInputRef}
                     type="file"
@@ -989,7 +1178,7 @@ export default function WritePage() {
               onChange={(event) => setContent(event.target.value)}
               dir={isRTL(language) ? "rtl" : "ltr"}
                 className="field min-h-[320px] resize-y border-0 leading-7"
-              placeholder="Start writing..."
+              placeholder="Start writing your story here..."
               required
             />
               <WritingStats content={content} />
@@ -1000,10 +1189,10 @@ export default function WritePage() {
             <section className="write-body-field space-y-4">
               <div className="write-chrome flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div>
-                  <h2 className="serif-title text-2xl font-bold text-[#25211d]">
+                  <h2 className="serif-title text-2xl font-bold text-[var(--ink)]">
                     Chapters
                   </h2>
-                  <p className="mt-1 text-sm text-[#8b7f72]">
+                  <p className="mt-1 text-sm text-[var(--text3)]">
                     Use arrows to reorder chapters before publishing.
                   </p>
                 </div>
@@ -1020,9 +1209,9 @@ export default function WritePage() {
                 <details
                   key={index}
                   open={index === 0}
-                  className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/60 p-4"
+                  className="rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-4"
                 >
-                  <summary className="cursor-pointer font-bold text-[#352a20]">
+                  <summary className="cursor-pointer font-bold text-[var(--text)]">
                     Chapter {index + 1}
                     {chapter.title ? ` - ${chapter.title}` : ""}
                   </summary>
@@ -1048,14 +1237,14 @@ export default function WritePage() {
                         <button
                           type="button"
                           onClick={() => removeChapter(index)}
-                          className="rounded-md border border-[#9f3d2e]/35 px-3 py-1.5 text-sm font-bold text-[#9f3d2e]"
+                          className="rounded-md border border-[var(--accent2)]/35 px-3 py-1.5 text-sm font-bold text-[var(--accent2)]"
                         >
                           Remove chapter
                         </button>
                       ) : null}
                     </div>
                     <label className="block">
-                      <span className="text-sm font-bold text-[#352a20]">
+                      <span className="text-sm font-bold text-[var(--text)]">
                         Chapter title
                       </span>
                       <input
@@ -1068,7 +1257,7 @@ export default function WritePage() {
                       />
                     </label>
                     <label className="block">
-                      <span className="text-sm font-bold text-[#352a20]">
+                      <span className="text-sm font-bold text-[var(--text)]">
                         Chapter content
                       </span>
                       <textarea
@@ -1088,8 +1277,8 @@ export default function WritePage() {
             </section>
           )}
 
-          <section className="write-chrome rounded-lg border border-[#ded2c1] bg-[#fffaf2]/55 p-5">
-            <label className="flex items-center gap-3 text-sm font-bold text-[#352a20]">
+          <section className="write-chrome rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-5">
+            <label className="flex items-center gap-3 text-sm font-bold text-[var(--text)]">
               <input
                 type="checkbox"
                 checked={pollEnabled}
@@ -1101,7 +1290,7 @@ export default function WritePage() {
             {pollEnabled ? (
               <div className="mt-5 space-y-4">
                 <label className="block">
-                  <span className="text-sm font-bold text-[#352a20]">
+                  <span className="text-sm font-bold text-[var(--text)]">
                     Poll question
                   </span>
                   <input
@@ -1111,13 +1300,13 @@ export default function WritePage() {
                     className="field mt-2"
                     placeholder="Ask readers to vote..."
                   />
-                  <span className="mt-1 block text-xs text-[#8b7f72]">
+                  <span className="mt-1 block text-xs text-[var(--text3)]">
                     {pollQuestion.length}/200
                   </span>
                 </label>
 
                 <div className="space-y-3">
-                  <p className="text-sm font-bold text-[#352a20]">Options</p>
+                  <p className="text-sm font-bold text-[var(--text)]">Options</p>
                   {pollOptions.map((option, index) => (
                     <div key={index} className="flex gap-2">
                       <input
@@ -1132,7 +1321,7 @@ export default function WritePage() {
                         <button
                           type="button"
                           onClick={() => removePollOption(index)}
-                          className="rounded-md border border-[#9f3d2e]/35 px-3 text-sm font-bold text-[#9f3d2e]"
+                          className="rounded-md border border-[var(--accent2)]/35 px-3 text-sm font-bold text-[var(--accent2)]"
                         >
                           x
                         </button>
@@ -1156,7 +1345,7 @@ export default function WritePage() {
           <section className="write-chrome block">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <label className="block flex-1">
-                <span className="text-sm font-bold text-[#352a20]">Tags</span>
+                <span className="text-sm font-bold text-[var(--text)]">Tags</span>
                 <input
                   value={tags}
                   onChange={(event) => setTags(event.target.value)}
@@ -1180,15 +1369,15 @@ export default function WritePage() {
             </div>
 
             {tagSuggestions.length > 0 ? (
-              <div className="mt-3 rounded-md border border-[#ded2c1] bg-[#fffaf2]/70 p-3">
-                <p className="text-xs italic text-[#8b7f72]">
+              <div className="mt-3 rounded-md border border-[var(--border)] bg-[var(--bg3)] p-3">
+                <p className="text-xs italic text-[var(--text3)]">
                   AI-suggested tags — click to add
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {tagSuggestions.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1 rounded-[3px] border border-[#d4c9b5] bg-[#f0e8d8] px-2.5 py-1 text-xs font-bold text-[#7a4f2d]"
+                      className="inline-flex items-center gap-1 rounded-[3px] border border-[var(--border)] bg-[var(--bg4)] px-2.5 py-1 text-xs font-bold text-[var(--accent2)]"
                     >
                       <button
                         type="button"
@@ -1201,7 +1390,7 @@ export default function WritePage() {
                       <button
                         type="button"
                         onClick={() => dismissSuggestedTag(tag)}
-                        className="pl-1 text-[#8b7f72] hover:text-[#9f3d2e]"
+                        className="pl-1 text-[var(--text3)] hover:text-[var(--accent2)]"
                         aria-label={`Dismiss ${tag}`}
                       >
                         x
@@ -1213,18 +1402,18 @@ export default function WritePage() {
             ) : null}
           </section>
 
-          <section className="write-chrome rounded-lg border border-[#ded2c1] bg-[#fffaf2]/55 p-5">
-            <h2 className="serif-title text-2xl font-bold text-[#25211d]">
+          <section className="write-chrome rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-5">
+            <h2 className="serif-title text-2xl font-bold text-[var(--ink)]">
               Content warnings
             </h2>
-            <p className="mt-1 text-sm text-[#8b7f72]">
+            <p className="mt-1 text-sm text-[var(--text3)]">
               Select any themes readers should know before opening the post.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {CONTENT_WARNING_OPTIONS.map((warning) => (
                 <label
                   key={warning}
-                  className="flex items-center gap-3 rounded-md border border-[#ded2c1] bg-[#fffaf2]/70 px-3 py-2 text-sm font-bold text-[#352a20]"
+                  className="flex items-center gap-3 rounded-md border border-[var(--border)] bg-[var(--bg3)] px-3 py-2 text-sm font-bold text-[var(--text)]"
                 >
                   <input
                     type="checkbox"
@@ -1238,7 +1427,7 @@ export default function WritePage() {
           </section>
 
           <label className="write-chrome block">
-            <span className="text-sm font-bold text-[#352a20]">
+            <span className="text-sm font-bold text-[var(--text)]">
               Post to group
             </span>
             <select
@@ -1256,11 +1445,11 @@ export default function WritePage() {
           </label>
 
           {editingMode && draftId ? (
-            <section className="write-chrome rounded-lg border border-[#ded2c1] bg-[#fffaf2]/55 p-5">
-              <h2 className="serif-title text-2xl font-bold text-[#25211d]">
+            <section className="write-chrome rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-5">
+              <h2 className="serif-title text-2xl font-bold text-[var(--ink)]">
                 Co-authors
               </h2>
-              <p className="mt-1 text-sm text-[#8b7f72]">
+              <p className="mt-1 text-sm text-[var(--text3)]">
                 Invite another writer to help edit this post.
               </p>
 
@@ -1269,7 +1458,7 @@ export default function WritePage() {
                   coAuthors.map((coAuthor) => (
                     <span
                       key={coAuthor._id}
-                      className="inline-flex items-center gap-2 rounded-full border border-[#ded2c1] bg-[#fffaf2] px-3 py-1.5 text-sm font-bold text-[#352a20]"
+                      className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--bg3)] px-3 py-1.5 text-sm font-bold text-[var(--text)]"
                     >
                       {coAuthor.avatar ? (
                         <img
@@ -1278,7 +1467,7 @@ export default function WritePage() {
                           className="h-6 w-6 rounded-full object-cover"
                         />
                       ) : (
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#ead9c7] text-xs text-[#8f5f35]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--bg4)] text-xs text-[var(--accent2)]">
                           {(coAuthor.name ?? "C").slice(0, 1).toUpperCase()}
                         </span>
                       )}
@@ -1287,7 +1476,7 @@ export default function WritePage() {
                         <button
                           type="button"
                           onClick={() => removeCoAuthor(coAuthor._id)}
-                          className="ml-1 text-[#9f3d2e]"
+                          className="ml-1 text-[var(--accent2)]"
                           aria-label={`Remove ${coAuthor.name}`}
                         >
                           x
@@ -1296,20 +1485,20 @@ export default function WritePage() {
                     </span>
                   ))
                 ) : (
-                  <p className="text-sm text-[#8b7f72]">No co-authors yet.</p>
+                  <p className="text-sm text-[var(--text3)]">No co-authors yet.</p>
                 )}
               </div>
 
               {pendingInvites.length > 0 ? (
                 <div className="mt-4">
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--text3)]">
                     Pending invites
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {pendingInvites.map((invite) => (
                       <span
                         key={invite.user?._id ?? invite.user}
-                        className="rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold text-[#8f5f35]"
+                        className="rounded-full bg-[var(--bg4)] px-3 py-1 text-xs font-bold text-[var(--accent2)]"
                       >
                         {invite.user?.name ?? invite.user?.email ?? "Invited user"}
                       </span>
@@ -1339,17 +1528,17 @@ export default function WritePage() {
             </section>
           ) : null}
 
-          <section className="write-chrome rounded-lg border border-[#ded2c1] bg-[#fffaf2]/55 p-5">
-            <h2 className="serif-title text-2xl font-bold text-[#25211d]">
+          <section className="write-chrome rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-5">
+            <h2 className="serif-title text-2xl font-bold text-[var(--ink)]">
               Add to Series
             </h2>
-            <p className="mt-1 text-sm text-[#8b7f72]">
+            <p className="mt-1 text-sm text-[var(--text3)]">
               Group this post with related stories or blogs.
             </p>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-[1fr_140px]">
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">
+                <span className="text-sm font-bold text-[var(--text)]">
                   Existing series
                 </span>
                 <select
@@ -1368,7 +1557,7 @@ export default function WritePage() {
               </label>
 
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">Part</span>
+                <span className="text-sm font-bold text-[var(--text)]">Part</span>
                 <input
                   type="number"
                   min="1"
@@ -1382,7 +1571,7 @@ export default function WritePage() {
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">
+                <span className="text-sm font-bold text-[var(--text)]">
                   New series title
                 </span>
                 <input
@@ -1394,7 +1583,7 @@ export default function WritePage() {
               </label>
 
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">
+                <span className="text-sm font-bold text-[var(--text)]">
                   Description
                 </span>
                 <input
@@ -1407,68 +1596,11 @@ export default function WritePage() {
             </div>
           </section>
 
-          <div className="write-chrome grid gap-5 sm:grid-cols-2">
-            <label className="block">
-              <span className="text-sm font-bold text-[#352a20]">
-                Cover image
-              </span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(event) => {
-                  setImageFile(event.target.files?.[0] ?? null);
-                  setGeneratedCoverUrl("");
-                }}
-                className="field mt-2 file:mr-4 file:rounded-md file:border-0 file:bg-[#2f4638] file:px-4 file:py-2 file:font-bold file:text-[#fffaf2]"
-              />
-              {imageFile ? (
-                <p className="mt-2 text-xs text-[#8b7f72]">{imageFile.name}</p>
-              ) : null}
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleGenerateCover}
-                  disabled={generatingCover || !title.trim()}
-                  className="secondary-btn px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {generatingCover
-                    ? "Painting your cover... (this takes ~20 seconds)"
-                    : "Generate with AI"}
-                </button>
-                <span className="text-xs italic text-[#8b7f72]">
-                  AI-generated using DALL-E 3. You can replace this with your own image.
-                </span>
-              </div>
-              {(generatedCoverUrl || coverImage) && !imageFile ? (
-                <div className="mt-4 overflow-hidden rounded-md border border-[#ded2c1] bg-[#fffaf2]">
-                  <img
-                    src={getMediaUrl(generatedCoverUrl || coverImage)}
-                    alt="Cover preview"
-                    className="max-h-72 w-full object-contain opacity-100 mix-blend-normal filter-none"
-                    style={{ filter: "none" }}
-                  />
-                </div>
-              ) : null}
-            </label>
 
-            <label className="block">
-              <span className="text-sm font-bold text-[#352a20]">Video</span>
-              <input
-                type="file"
-                accept="video/*"
-                onChange={(event) => setVideoFile(event.target.files?.[0] ?? null)}
-                className="field mt-2 file:mr-4 file:rounded-md file:border-0 file:bg-[#2f4638] file:px-4 file:py-2 file:font-bold file:text-[#fffaf2]"
-              />
-              {videoFile ? (
-                <p className="mt-2 text-xs text-[#8b7f72]">{videoFile.name}</p>
-              ) : null}
-            </label>
-          </div>
+          {error ? <p className="write-chrome text-sm font-semibold text-[var(--accent2)]">{error}</p> : null}
+          {message ? <p className="write-chrome text-sm font-semibold text-[var(--green)]">{message}</p> : null}
 
-          {error ? <p className="write-chrome text-sm font-semibold text-[#9f3d2e]">{error}</p> : null}
-          {message ? <p className="write-chrome text-sm font-semibold text-[#5f7263]">{message}</p> : null}
-
-          <div className="write-chrome flex flex-col gap-3 sm:flex-row">
+          <div className="write-chrome flex flex-col gap-3 sm:flex-row sm:justify-end">
             <button
               type="button"
               onClick={handleSaveDraft}
@@ -1486,18 +1618,19 @@ export default function WritePage() {
                 isLoadingDraft ||
                 isScheduleInPast
               }
-              className="primary-btn w-full px-5 py-3.5 sm:w-auto"
+              className="primary-btn w-full px-6 py-3.5 text-sm font-bold uppercase tracking-[0.15em] sm:w-auto"
+              style={{ fontFamily: "var(--font-bebas), sans-serif", fontSize: "1rem", letterSpacing: "0.12em" }}
             >
               {isSubmitting
                 ? "Submitting..."
                 : editingMode
                   ? "Submit Changes"
-                  : "Submit for Review"}
+                  : "SUBMIT CASE"}
             </button>
           </div>
 
-          <div className="write-chrome rounded-lg border border-[#ded2c1] bg-[#fffaf2]/55 p-4">
-            <label className="flex items-center gap-3 text-sm font-bold text-[#352a20]">
+          <div className="write-chrome rounded-lg border border-[var(--border)] bg-[var(--bg3)] p-4">
+            <label className="flex items-center gap-3 text-sm font-bold text-[var(--text)]">
               <input
                 type="checkbox"
                 checked={scheduleEnabled}
@@ -1513,12 +1646,12 @@ export default function WritePage() {
                   onChange={(event) => setScheduledAt(event.target.value)}
                   className="field"
                 />
-                <p className="mt-2 text-xs text-[#8b7f72]">
+                <p className="mt-2 text-xs text-[var(--text3)]">
                   Your post will be reviewed, then published automatically at
                   your chosen time
                 </p>
                 {isScheduleInPast ? (
-                  <p className="mt-2 text-xs font-semibold text-[#9f3d2e]">
+                  <p className="mt-2 text-xs font-semibold text-[var(--accent2)]">
                     Choose a future date and time before submitting.
                   </p>
                 ) : null}
@@ -1534,6 +1667,8 @@ export default function WritePage() {
           </div>
         ) : null}
       </section>
+        </div>
+      </div>
 
       {showHistory && draftId ? (
         <RevisionHistory
@@ -1546,6 +1681,16 @@ export default function WritePage() {
           }}
         />
       ) : null}
+
+      {/* Footer */}
+      <footer className="border-t py-8 text-center" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-center gap-6">
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="Facebook">⬤</a>
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="Instagram">⬤</a>
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="YouTube">⬤</a>
+        </div>
+        <p className="mt-4 text-xs" style={{ color: "var(--text3)" }}>© 2026 The Hidden Case. All rights reserved.</p>
+      </footer>
     </main>
   );
 }
