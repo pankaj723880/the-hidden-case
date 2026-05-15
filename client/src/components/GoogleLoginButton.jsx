@@ -57,6 +57,12 @@ export default function GoogleLoginButton({ onSuccess, onError }) {
   const [loadError, setLoadError] = useState("");
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
+  // Store latest callbacks in refs so we don't re-trigger useEffect on every render
+  const callbacksRef = useRef({ onSuccess, onError, loginWithGoogle });
+  useEffect(() => {
+    callbacksRef.current = { onSuccess, onError, loginWithGoogle };
+  });
+
   useEffect(() => {
     if (!clientId || clientId === "your_google_oauth_client_id_here") return;
     let cancelled = false;
@@ -71,24 +77,29 @@ export default function GoogleLoginButton({ onSuccess, onError }) {
           return;
         }
 
+        // Initialize only once per mount
         googleIdentity.initialize({
           client_id: clientId,
           callback: async (response) => {
             try {
+              const { loginWithGoogle, onSuccess } = callbacksRef.current;
               const loggedInUser = await loginWithGoogle(response.credential);
               onSuccess?.(loggedInUser);
             } catch (err) {
-              onError?.(err);
+              callbacksRef.current.onError?.(err);
             }
           },
         });
+
         googleIdentity.renderButton(buttonRef.current, {
           theme: "outline",
           size: "large",
           width: buttonRef.current.offsetWidth || 320,
           text: "continue_with",
         });
+        
         setIsReady(true);
+        
         fallbackTimer = window.setTimeout(() => {
           if (!buttonRef.current?.querySelector("iframe")) {
             setLoadError(
@@ -97,8 +108,10 @@ export default function GoogleLoginButton({ onSuccess, onError }) {
           }
         }, 2500);
       } catch (err) {
-        setLoadError("Could not load Google sign-in.");
-        onError?.(err);
+        if (!cancelled) {
+          setLoadError("Could not load Google sign-in.");
+          callbacksRef.current.onError?.(err);
+        }
       }
     })();
 
@@ -106,20 +119,19 @@ export default function GoogleLoginButton({ onSuccess, onError }) {
       cancelled = true;
       if (fallbackTimer) window.clearTimeout(fallbackTimer);
     };
-  }, [clientId, loginWithGoogle, onError, onSuccess]);
+  }, [clientId]); // Remove callbacks from dependencies to prevent infinite re-initialization
 
   const handlePrompt = () => {
     if (!window.google?.accounts?.id) {
       setLoadError("Google sign-in is still unavailable.");
       return;
     }
-
     window.google.accounts.id.prompt();
   };
 
   if (!clientId || clientId === "your_google_oauth_client_id_here") {
     return (
-      <p className="mt-4 rounded-md border border-[#ded2c1] bg-[#ead9c7]/50 px-4 py-3 text-xs font-semibold text-[#6d6155]">
+      <p className="mt-4 rounded-md border px-4 py-3 text-xs font-semibold" style={{ borderColor: "rgba(192,57,43,0.3)", backgroundColor: "rgba(192,57,43,0.08)", color: "var(--accent2)" }}>
         Google login needs `REACT_APP_GOOGLE_CLIENT_ID` and server
         `GOOGLE_CLIENT_ID`.
       </p>
@@ -130,20 +142,20 @@ export default function GoogleLoginButton({ onSuccess, onError }) {
     <div className="mt-5">
       <div ref={buttonRef} className="min-h-11 w-full" />
       {!isReady || isLoading ? (
-        <p className="mt-2 text-center text-xs text-[#8b7f72]">
+        <p className="mt-2 text-center text-xs" style={{ color: "var(--text3)" }}>
           Loading Google sign-in...
         </p>
       ) : null}
       {loadError ? (
-        <div className="mt-3 rounded-md border border-[#ded2c1] bg-[#ead9c7]/50 p-3">
-          <p className="text-xs font-semibold text-[#6d6155]">{loadError}</p>
+        <div className="mt-3 rounded-md border p-3" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}>
+          <p className="text-xs font-semibold" style={{ color: "var(--text2)" }}>{loadError}</p>
           <button
             type="button"
             onClick={handlePrompt}
             disabled={!isReady}
             className="secondary-btn mt-3 w-full px-4 py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Continue with Google
+            Retry Login
           </button>
         </div>
       ) : null}
