@@ -171,26 +171,28 @@ export default function BrowsePage() {
         />
         <div className="editorial-shell relative z-10 text-center">
           <span
-            className="inline-block rounded-md border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em]"
+            className="animate-fade-in-up inline-block rounded-md border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em]"
             style={{
               borderColor: "var(--accent)",
               backgroundColor: "rgba(192,57,43,0.1)",
               color: "var(--accent2)",
+              animationDelay: "0.1s",
             }}
           >
             CLASSIFIED ARCHIVE
           </span>
           <h1
-            className="mx-auto mt-5 max-w-3xl text-[2.5rem] leading-none sm:text-[4rem]"
+            className="animate-fade-in-up mx-auto mt-5 max-w-3xl text-[2.5rem] leading-none sm:text-[4rem]"
             style={{
               color: "#fff",
               fontFamily: "var(--font-bebas), sans-serif",
               letterSpacing: "0.05em",
+              animationDelay: "0.25s",
             }}
           >
             BROWSE THE CASE FILES
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm" style={{ color: "var(--text2)" }}>
+          <p className="animate-fade-in-up mx-auto mt-4 max-w-xl text-sm" style={{ color: "var(--text2)", animationDelay: "0.4s" }}>
             Search through {posts.length > 0 ? `${posts.length}+` : ""} documented cases of unsolved mysteries,
             true crime, and paranormal encounters.
           </p>
@@ -259,12 +261,12 @@ export default function BrowsePage() {
         ) : null}
 
         {/* Case File Grid */}
-        <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <section className="stagger grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
                 <article
                   key={i}
-                  className="h-80 animate-pulse rounded-xl border p-6"
+                  className="h-80 animate-shimmer rounded-xl border p-6"
                   style={{ borderColor: "var(--border)", backgroundColor: "var(--bg2)" }}
                 >
                   <div className="mb-5 h-36 rounded-lg" style={{ backgroundColor: "var(--bg4)" }} />
@@ -276,13 +278,14 @@ export default function BrowsePage() {
                 </article>
               ))
             : posts.map((post) => (
+              <div key={post._id} className="animate-fade-in-up">
                 <PostCard
-                  key={post._id}
                   post={post}
                   onLike={handleLike}
                   onShare={handleShare}
                   sharedPostId={sharedPostId}
                 />
+              </div>
               ))}
         </section>
 

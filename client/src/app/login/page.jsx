@@ -44,21 +44,23 @@ export default function LoginPage() {
         />
         <div className="editorial-shell relative z-10 text-center">
           <span
-            className="inline-block rounded-md border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em]"
+            className="animate-fade-in-up inline-block rounded-md border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.25em]"
             style={{
               borderColor: "var(--accent)",
               backgroundColor: "rgba(192,57,43,0.1)",
               color: "var(--accent2)",
+              animationDelay: "0.1s",
             }}
           >
             CLASSIFIED ACCESS
           </span>
           <h1
-            className="mx-auto mt-5 max-w-2xl text-[2.5rem] leading-none sm:text-[4rem]"
+            className="animate-fade-in-up mx-auto mt-5 max-w-2xl text-[2.5rem] leading-none sm:text-[4rem]"
             style={{
               color: "#fff",
               fontFamily: "var(--font-bebas), sans-serif",
               letterSpacing: "0.05em",
+              animationDelay: "0.25s",
             }}
           >
             AGENT IDENTIFICATION
@@ -74,11 +76,12 @@ export default function LoginPage() {
         <div className="mx-auto max-w-md">
           <form
             onSubmit={handleSubmit}
-            className="rounded-xl border p-6 sm:p-8"
+            className="animate-scale-in animate-glow rounded-xl border p-6 sm:p-8"
             style={{
               borderColor: "var(--border)",
               backgroundColor: "var(--bg2)",
               boxShadow: "0 0 30px rgba(192,57,43,0.06), 0 4px 24px rgba(0,0,0,0.3)",
+              animationDelay: "0.3s",
             }}
           >
             <div className="mb-6 text-center">

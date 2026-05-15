@@ -123,9 +123,8 @@ export default function HomePage() {
           background: "linear-gradient(180deg, #0a0a0a 0%, #1a0f0f 40%, #2a1515 70%, #0d0d0d 100%)",
         }}
       >
-        {/* Atmospheric glow effect */}
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-glow"
           style={{
             width: "600px",
             height: "400px",
@@ -134,58 +133,54 @@ export default function HomePage() {
         />
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           <p
-            className="text-sm font-medium uppercase tracking-[0.3em]"
-            style={{ color: "var(--text3)" }}
+            className="animate-fade-in-up text-sm font-medium uppercase tracking-[0.3em]"
+            style={{ color: "var(--accent2)", animationDelay: "0.1s" }}
           >
-            BEBAS NEUE
+            THE HIDDEN CASE
           </p>
           <h1
-            className="mt-3 text-[3rem] leading-none sm:text-[4.5rem]"
+            className="animate-fade-in-up mt-3 text-[3rem] leading-none sm:text-[4.5rem]"
             style={{
               color: "#fff",
               fontFamily: "var(--font-bebas), sans-serif",
               letterSpacing: "0.06em",
+              animationDelay: "0.25s",
             }}
           >
-            BROWSE CASES
+            UNSOLVED MYSTERIES<br />HIDDEN FROM THE WORLD
           </h1>
           <p
-            className="mx-auto mt-4 max-w-xl text-[1rem]"
-            style={{ color: "var(--text2)" }}
+            className="animate-fade-in-up mx-auto mt-4 max-w-xl text-[1rem]"
+            style={{ color: "var(--text2)", animationDelay: "0.4s" }}
           >
             Discover unsolved mysteries, true crime stories, and
             paranormal encounters.
           </p>
-          <div className="hero-btns mt-8 flex justify-center gap-4">
+          <div className="hero-btns animate-fade-in-up mt-8 flex justify-center gap-4" style={{ animationDelay: "0.55s" }}>
             <AppLink
               href="/browse"
               className="primary-btn px-8 py-3 hover:no-underline"
             >
-              Browse Stories
+              Browse Cases
             </AppLink>
             <AppLink
               href="/write"
-              className="px-8 py-3 hover:no-underline"
-              style={{
-                border: "1px solid var(--border2)",
-                color: "var(--text)",
-                borderRadius: 6,
-              }}
+              className="secondary-btn px-8 py-3 hover:no-underline"
             >
-              Write Your Story
+              Submit Evidence
             </AppLink>
           </div>
         </div>
       </section>
 
       {/* Quote */}
-      <section className="editorial-shell py-10">
+      <section className="editorial-shell animate-fade-in py-10" style={{ animationDelay: "0.7s" }}>
         <blockquote
-          className="mx-auto max-w-3xl border-l-4 py-2 pl-5 text-[1.05rem] italic leading-8"
+          className="animate-border-glow mx-auto max-w-3xl rounded-lg border-l-4 bg-[var(--bg2)] px-6 py-5 text-[1.05rem] italic leading-8 transition-all duration-500"
           style={{ borderColor: "var(--accent)", color: "var(--text2)", fontFamily: "var(--font-lora), Georgia, serif" }}
         >
           &ldquo;{homeQuotes[homeQuoteIndex]}&rdquo;
-          <span className="block pt-2 text-sm" style={{ color: "var(--text3)" }}>— The Hidden Case</span>
+          <span className="block pt-2 text-sm not-italic" style={{ color: "var(--text3)" }}>— The Hidden Case</span>
         </blockquote>
       </section>
 
@@ -218,9 +213,11 @@ export default function HomePage() {
               Loading posts...
             </div>
           ) : feedPosts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="stagger grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {feedPosts.map((post) => (
-                <PostCard key={post._id} post={post} />
+                <div key={post._id} className="animate-fade-in-up">
+                  <PostCard post={post} />
+                </div>
               ))}
             </div>
           ) : (
@@ -294,7 +291,7 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="stagger grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {challengeWinners.slice(0, 3).map((challenge) => (
               <article
                 key={challenge._id}
@@ -399,7 +396,7 @@ export default function HomePage() {
             </AppLink>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trendingPosts.map((post, index) => (
               <div
                 key={post._id}
@@ -416,14 +413,15 @@ export default function HomePage() {
       ) : null}
 
       {/* Info cards */}
-      <section className="editorial-shell grid gap-5 py-10 md:grid-cols-3">
+      <section className="editorial-shell stagger grid gap-5 py-10 md:grid-cols-3">
         {[
-          ["STORIES", "Narrative pieces with character, place, and emotion."],
-          ["BLOGS", "Useful thoughts, guides, opinions, and personal notes."],
-          ["COMMUNITY", "Like, comment, share, and follow new writing."],
-        ].map(([title, text]) => (
-          <article key={title} className="paper-card rounded-xl p-6">
-            <h2 className="serif-title text-2xl font-bold">
+          ["🔍", "CASE FILES", "Narrative pieces with character, suspense, and mystery."],
+          ["📝", "FIELD NOTES", "Useful thoughts, guides, theories, and personal accounts."],
+          ["🤝", "THE NETWORK", "Like, comment, share, and follow fellow investigators."],
+        ].map(([icon, title, text]) => (
+          <article key={title} className="animate-fade-in-up paper-card rounded-xl p-6 transition-all duration-300 hover:border-[var(--accent)]/30">
+            <span className="text-3xl">{icon}</span>
+            <h2 className="serif-title mt-3 text-2xl font-bold">
               {title}
             </h2>
             <p className="mt-3 leading-7" style={{ color: "var(--text2)" }}>{text}</p>
