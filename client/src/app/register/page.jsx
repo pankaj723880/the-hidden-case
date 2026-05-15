@@ -29,22 +29,22 @@ export default function RegisterPage() {
   return (
     <main className="editorial-shell grid min-h-[calc(100vh-4rem)] items-center gap-8 py-12 md:grid-cols-[1fr_0.9fr]">
       <section>
-        <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
+        <p className="text-xs font-semibold uppercase tracking-[0.26em]" style={{ color: "var(--accent2)" }}>
           Create an account
         </p>
-        <h1 className="serif-title mt-3 max-w-xl text-5xl font-bold leading-tight text-[#25211d]">
-          Join the community and publish your own stories.
+        <h1 className="serif-title mt-3 max-w-xl text-5xl font-bold leading-tight">
+          JOIN THE COMMUNITY AND PUBLISH YOUR OWN STORIES.
         </h1>
-        <p className="mt-5 max-w-xl text-lg leading-8 text-[#6d6155]">
+        <p className="mt-5 max-w-xl text-lg leading-8" style={{ color: "var(--text2)" }}>
           Reading is open for everyone. An account is only needed for writing,
           liking, commenting, and managing your profile.
         </p>
       </section>
 
-      <form onSubmit={handleSubmit} className="paper-card rounded-lg p-6 sm:p-8">
+      <form onSubmit={handleSubmit} className="paper-card rounded-xl p-6 sm:p-8">
         <div className="space-y-5">
           <label className="block">
-            <span className="text-sm font-bold text-[#352a20]">Name</span>
+            <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Name</span>
             <input
               value={name}
               onChange={(event) => setName(event.target.value)}
@@ -55,7 +55,7 @@ export default function RegisterPage() {
           </label>
 
           <label className="block">
-            <span className="text-sm font-bold text-[#352a20]">Email</span>
+            <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Email</span>
             <input
               type="email"
               value={email}
@@ -67,7 +67,7 @@ export default function RegisterPage() {
           </label>
 
           <label className="block">
-            <span className="text-sm font-bold text-[#352a20]">Password</span>
+            <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Password</span>
             <input
               type="password"
               value={password}
@@ -80,7 +80,7 @@ export default function RegisterPage() {
           </label>
         </div>
 
-        {error ? <p className="mt-5 text-sm font-semibold text-[#9f3d2e]">{error}</p> : null}
+        {error ? <p className="mt-5 text-sm font-semibold" style={{ color: "var(--accent2)" }}>{error}</p> : null}
 
         <button
           type="submit"
@@ -90,10 +90,10 @@ export default function RegisterPage() {
           {isLoading ? "Creating..." : "Register"}
         </button>
 
-        <div className="my-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8b7f72]">
-          <span className="h-px flex-1 bg-[#ded2c1]" />
+        <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em]" style={{ color: "var(--text3)" }}>
+          <span className="h-px flex-1" style={{ backgroundColor: "var(--border)" }} />
           Or
-          <span className="h-px flex-1 bg-[#ded2c1]" />
+          <span className="h-px flex-1" style={{ backgroundColor: "var(--border)" }} />
         </div>
 
         <GoogleLoginButton
@@ -101,9 +101,9 @@ export default function RegisterPage() {
           onError={(err) => setError(getErrorMessage(err))}
         />
 
-        <p className="mt-5 text-center text-sm text-[#6d6155]">
+        <p className="mt-5 text-center text-sm" style={{ color: "var(--text2)" }}>
           Already registered?{" "}
-          <AppLink href="/login" className="font-bold text-[#2f4638]">
+          <AppLink href="/login" className="font-semibold" style={{ color: "var(--accent2)" }}>
             Login
           </AppLink>
         </p>

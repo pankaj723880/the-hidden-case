@@ -12,7 +12,7 @@ const PAGE_SIZE = 9;
 function LoadingSpinner() {
   return (
     <div className="flex justify-center py-8">
-      <div className="h-9 w-9 animate-spin rounded-full border-4 border-[var(--accent3)] border-t-[var(--gold)]" />
+      <div className="h-9 w-9 animate-spin rounded-full border-4 border-[var(--border2)] border-t-[var(--accent)]" />
     </div>
   );
 }
@@ -153,14 +153,13 @@ export default function BrowsePage() {
     <main className="editorial-shell py-12">
       <header className="mb-9 flex flex-col justify-between gap-5 border-b pb-8 md:flex-row md:items-end" style={{ borderColor: "var(--border)" }}>
         <div>
-          <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
-          <p className="text-xs uppercase tracking-[0.15rem]" style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.15rem]" style={{ color: "var(--text3)" }}>
             Library
           </p>
-          <h1 className="serif-title mt-2 text-5xl font-bold italic">
-            Browse
+          <h1 className="serif-title mt-2 text-5xl font-bold">
+            BROWSE
           </h1>
-          <p className="mt-3 max-w-2xl text-[0.88rem] italic" style={{ color: "var(--text3)", fontFamily: "var(--font-garamond), Georgia, serif" }}>
+          <p className="mt-3 max-w-2xl text-[0.88rem]" style={{ color: "var(--text3)" }}>
             {posts.length} stories and blogs
           </p>
         </div>
@@ -189,12 +188,11 @@ export default function BrowsePage() {
         <button
           type="button"
           onClick={() => setMoodFilter("")}
-          className="rounded-[3px] border px-3 py-1.5 text-xs font-bold"
+          className="rounded-md border px-3 py-1.5 text-xs font-semibold transition"
           style={{
-            borderColor: "var(--border)",
-            backgroundColor: filters.mood ? "var(--bg2)" : "var(--accent)",
-            color: filters.mood ? "var(--text2)" : "#faf7f2",
-            fontFamily: "var(--font-garamond), Georgia, serif",
+            borderColor: filters.mood ? "var(--border)" : "var(--accent)",
+            backgroundColor: filters.mood ? "transparent" : "var(--accent)",
+            color: filters.mood ? "var(--text2)" : "#fff",
           }}
         >
           All moods
@@ -204,12 +202,11 @@ export default function BrowsePage() {
             key={mood}
             type="button"
             onClick={() => setMoodFilter(mood)}
-            className="rounded-[3px] border px-3 py-1.5 text-xs font-bold capitalize"
+            className="rounded-md border px-3 py-1.5 text-xs font-semibold capitalize transition"
             style={{
-              borderColor: "var(--border)",
-              backgroundColor: filters.mood === mood ? "var(--accent)" : "var(--bg2)",
-              color: filters.mood === mood ? "#faf7f2" : "var(--text2)",
-              fontFamily: "var(--font-garamond), Georgia, serif",
+              borderColor: filters.mood === mood ? "var(--accent)" : "var(--border)",
+              backgroundColor: filters.mood === mood ? "var(--accent)" : "transparent",
+              color: filters.mood === mood ? "#fff" : "var(--text2)",
             }}
           >
             {mood}
@@ -217,17 +214,17 @@ export default function BrowsePage() {
         ))}
       </div>
 
-      {error ? <p className="mb-6 text-sm font-semibold text-[#9f3d2e]">{error}</p> : null}
+      {error ? <p className="mb-6 text-sm font-semibold" style={{ color: "var(--accent2)" }}>{error}</p> : null}
 
       <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {loading
           ? Array.from({ length: 6 }).map((_, i) => (
-              <article key={i} className="card h-72 animate-pulse rounded-[4px] p-6">
-                <div className="mb-5 h-32 rounded-md bg-[#ead9c7]" />
-                <div className="h-5 w-3/4 rounded bg-[#d8cab8]" />
+              <article key={i} className="card h-72 animate-pulse rounded-xl p-6">
+                <div className="mb-5 h-32 rounded-lg" style={{ backgroundColor: "var(--bg4)" }} />
+                <div className="h-5 w-3/4 rounded" style={{ backgroundColor: "var(--bg3)" }} />
                 <div className="mt-4 space-y-2">
-                  <div className="h-3 rounded bg-[#ead9c7]" />
-                  <div className="h-3 w-5/6 rounded bg-[#ead9c7]" />
+                  <div className="h-3 rounded" style={{ backgroundColor: "var(--bg4)" }} />
+                  <div className="h-3 w-5/6 rounded" style={{ backgroundColor: "var(--bg4)" }} />
                 </div>
               </article>
             ))
@@ -247,7 +244,7 @@ export default function BrowsePage() {
       {loadingMore ? <LoadingSpinner /> : null}
 
       {!loading && posts.length === 0 ? (
-        <p className="card mt-10 rounded-[4px] p-6 text-center italic" style={{ color: "var(--text3)", fontFamily: "var(--font-garamond), Georgia, serif" }}>
+        <p className="card mt-10 rounded-xl p-6 text-center" style={{ color: "var(--text3)" }}>
           📜 No posts found
         </p>
       ) : null}

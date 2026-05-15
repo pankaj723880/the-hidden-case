@@ -116,64 +116,75 @@ export default function HomePage() {
 
   return (
     <main>
-      <section className="hero px-8 py-20 text-center sm:py-28" style={{ background: "linear-gradient(160deg, #2c2416 0%, #4a3520 40%, #7a4f2d 100%)" }}>
-        <div style={{ width: 60, height: 1, background: "var(--gold)", margin: "0 auto 1.5rem", opacity: 0.8 }} />
-        <h1
-          className="mx-auto text-[2.2rem] italic leading-tight sm:text-[3.5rem]"
+      {/* Hero Section — dark atmospheric */}
+      <section
+        className="hero relative overflow-hidden px-8 py-24 sm:py-32"
+        style={{
+          background: "linear-gradient(180deg, #0a0a0a 0%, #1a0f0f 40%, #2a1515 70%, #0d0d0d 100%)",
+        }}
+      >
+        {/* Atmospheric glow effect */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{
-            color: "#f5f0e8",
-            fontFamily: "var(--font-playfair), Georgia, serif",
-            letterSpacing: "0.02em",
-            textShadow: "0 2px 20px rgba(0,0,0,0.3)",
+            width: "600px",
+            height: "400px",
+            background: "radial-gradient(ellipse, rgba(212,160,32,0.08) 0%, rgba(192,57,43,0.04) 40%, transparent 70%)",
           }}
-        >
-          The Hidden Case
-        </h1>
-        <p
-          className="mx-auto mt-3 max-w-2xl text-[1.1rem] italic"
-          style={{ color: "rgba(245,240,232,0.7)", fontFamily: "var(--font-garamond), Georgia, serif" }}
-        >
-          Every story is a mystery waiting to be uncovered
-        </p>
-        <div className="mx-auto mt-6 text-base" style={{ color: "var(--gold)", opacity: 0.7 }}>
-          — ✦ —
-        </div>
-        <div className="hero-btns mt-7 flex justify-center gap-4">
-          <AppLink
-            href="/browse"
-            className="px-7 py-3 hover:no-underline"
+        />
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
+          <p
+            className="text-sm font-medium uppercase tracking-[0.3em]"
+            style={{ color: "var(--text3)" }}
+          >
+            BEBAS NEUE
+          </p>
+          <h1
+            className="mt-3 text-[3rem] leading-none sm:text-[4.5rem]"
             style={{
-              background: "var(--gold)",
-              color: "var(--ink)",
-              borderRadius: 3,
-              fontFamily: "var(--font-garamond), Georgia, serif",
-              letterSpacing: "0.08rem",
+              color: "#fff",
+              fontFamily: "var(--font-bebas), sans-serif",
+              letterSpacing: "0.06em",
             }}
           >
-            Browse Stories
-          </AppLink>
-          <AppLink
-            href="/write"
-            className="px-7 py-3 hover:no-underline"
-            style={{
-              border: "1px solid rgba(245,240,232,0.4)",
-              color: "#f5f0e8",
-              borderRadius: 3,
-              fontFamily: "var(--font-garamond), Georgia, serif",
-              letterSpacing: "0.08rem",
-            }}
+            BROWSE CASES
+          </h1>
+          <p
+            className="mx-auto mt-4 max-w-xl text-[1rem]"
+            style={{ color: "var(--text2)" }}
           >
-            Write Your Story
-          </AppLink>
+            Discover unsolved mysteries, true crime stories, and
+            paranormal encounters.
+          </p>
+          <div className="hero-btns mt-8 flex justify-center gap-4">
+            <AppLink
+              href="/browse"
+              className="primary-btn px-8 py-3 hover:no-underline"
+            >
+              Browse Stories
+            </AppLink>
+            <AppLink
+              href="/write"
+              className="px-8 py-3 hover:no-underline"
+              style={{
+                border: "1px solid var(--border2)",
+                color: "var(--text)",
+                borderRadius: 6,
+              }}
+            >
+              Write Your Story
+            </AppLink>
+          </div>
         </div>
       </section>
 
+      {/* Quote */}
       <section className="editorial-shell py-10">
         <blockquote
           className="mx-auto max-w-3xl border-l-4 py-2 pl-5 text-[1.05rem] italic leading-8"
-          style={{ borderColor: "var(--gold)", color: "var(--text2)", fontFamily: "var(--font-lora), Georgia, serif" }}
+          style={{ borderColor: "var(--accent)", color: "var(--text2)", fontFamily: "var(--font-lora), Georgia, serif" }}
         >
-          “{homeQuotes[homeQuoteIndex]}”
+          &ldquo;{homeQuotes[homeQuoteIndex]}&rdquo;
           <span className="block pt-2 text-sm" style={{ color: "var(--text3)" }}>— The Hidden Case</span>
         </blockquote>
       </section>
@@ -182,18 +193,18 @@ export default function HomePage() {
         <QuestPanel />
       ) : null}
 
+      {/* Personalised Feed */}
       {isAuthenticated ? (
         <section className="editorial-shell py-10">
           <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
-              <p className="text-xs uppercase tracking-[0.15rem]" style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}>
+              <p className="text-xs font-semibold uppercase tracking-[0.15rem]" style={{ color: "var(--text3)" }}>
                 Personalised
               </p>
               <h2 className="serif-title mt-2 text-4xl font-bold">
-                Your Feed
+                YOUR FEED
               </h2>
-              <p className="mt-2 text-sm font-semibold" style={{ color: "var(--text3)" }}>
+              <p className="mt-2 text-sm" style={{ color: "var(--text3)" }}>
                 {feedMode === "for-you"
                   ? "Posts from authors and tags you follow"
                   : "Fresh stories and blogs from the whole community"}
@@ -203,7 +214,7 @@ export default function HomePage() {
           </div>
 
           {isFeedLoading ? (
-            <div className="paper-card rounded-lg p-6" style={{ color: "var(--text2)" }}>
+            <div className="paper-card rounded-xl p-6" style={{ color: "var(--text2)" }}>
               Loading posts...
             </div>
           ) : feedPosts.length > 0 ? (
@@ -213,9 +224,9 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <div className="paper-card rounded-lg p-6">
-              <h3 className="serif-title text-2xl font-bold" style={{ color: "var(--text)" }}>
-                Follow some authors or tags to personalise your feed
+            <div className="paper-card rounded-xl p-6">
+              <h3 className="serif-title text-2xl font-bold">
+                FOLLOW SOME AUTHORS OR TAGS
               </h3>
               <p className="mt-2 leading-7" style={{ color: "var(--text2)" }}>
                 Start with authors you enjoy or tags that match what you want to read.
@@ -233,15 +244,15 @@ export default function HomePage() {
         </section>
       ) : null}
 
+      {/* Editor's Pick */}
       {featuredPosts.length > 0 ? (
         <section className="editorial-shell py-10">
           <div className="mb-6">
-            <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
-            <p className="text-xs uppercase tracking-[0.15rem]" style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.15rem]" style={{ color: "var(--text3)" }}>
               Selected by the editor
             </p>
             <h2 className="serif-title mt-2 text-4xl font-bold">
-              Editor&apos;s Pick
+              EDITOR&apos;S PICK
             </h2>
           </div>
 
@@ -271,15 +282,15 @@ export default function HomePage() {
         </section>
       ) : null}
 
+      {/* Challenge Winners */}
       {challengeWinners.length > 0 ? (
         <section className="editorial-shell py-10">
           <div className="mb-6">
-            <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
-            <p className="text-xs uppercase tracking-[0.15rem]" style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.15rem]" style={{ color: "var(--text3)" }}>
               Challenge laurels
             </p>
             <h2 className="serif-title mt-2 text-4xl font-bold">
-              Challenge Winners
+              CHALLENGE WINNERS
             </h2>
           </div>
 
@@ -287,15 +298,20 @@ export default function HomePage() {
             {challengeWinners.slice(0, 3).map((challenge) => (
               <article
                 key={challenge._id}
-                className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/80 p-4 shadow-[0_12px_35px_rgba(44,36,22,0.08)]"
+                className="rounded-xl border p-4"
+                style={{
+                  borderColor: "var(--border)",
+                  backgroundColor: "var(--bg2)",
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
+                }}
               >
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8f5f35]">
+                <p className="text-xs font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent2)" }}>
                   {challenge.title}
                 </p>
                 <div className="mt-4">
                   <PostCard post={challenge.winner.post} />
                 </div>
-                <p className="mt-3 text-xs font-semibold text-[#8b7f72]">
+                <p className="mt-3 text-xs font-semibold" style={{ color: "var(--text3)" }}>
                   Winner announced{" "}
                   {challenge.winner.selectedAt
                     ? new Date(challenge.winner.selectedAt).toLocaleDateString()
@@ -307,17 +323,17 @@ export default function HomePage() {
         </section>
       ) : null}
 
+      {/* Leaderboard Preview */}
       {leaderboardUsers.length > 0 ? (
         <section className="editorial-shell py-8">
-          <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5">
+          <div className="rounded-xl border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg2)" }}>
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
               <div>
-                <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
-                <p className="text-xs uppercase tracking-[0.15rem]" style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.15rem]" style={{ color: "var(--text3)" }}>
                   Leaderboard
                 </p>
-                <h2 className="serif-title mt-1 text-3xl font-bold text-[#25211d]">
-                  This month&apos;s top writers
+                <h2 className="serif-title mt-1 text-3xl font-bold">
+                  TOP WRITERS THIS MONTH
                 </h2>
               </div>
               <AppLink href="/leaderboard" className="secondary-btn px-4 py-2 text-sm">
@@ -329,7 +345,8 @@ export default function HomePage() {
                 <AppLink
                   key={writer._id}
                   href={`/profile/${writer._id}`}
-                  className="flex items-center gap-3 rounded-lg bg-[#ead9c7]/45 p-3"
+                  className="flex items-center gap-3 rounded-lg p-3 transition hover:no-underline"
+                  style={{ backgroundColor: "var(--bg3)" }}
                 >
                   <span className="text-xl">
                     {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
@@ -341,13 +358,13 @@ export default function HomePage() {
                       className="h-10 w-10 rounded-full object-cover"
                     />
                   ) : (
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#fffaf2] font-bold text-[#8f5f35]">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white" style={{ backgroundColor: "var(--accent)" }}>
                       {(writer.name ?? "U").slice(0, 1).toUpperCase()}
                     </span>
                   )}
                   <div>
-                    <p className="font-bold text-[#25211d]">{writer.name}</p>
-                    <p className="text-xs font-semibold text-[#8b7f72]">
+                    <p className="font-semibold" style={{ color: "var(--ink)" }}>{writer.name}</p>
+                    <p className="text-xs font-semibold" style={{ color: "var(--text3)" }}>
                       {writer.xp ?? 0} XP
                     </p>
                   </div>
@@ -358,25 +375,25 @@ export default function HomePage() {
         </section>
       ) : null}
 
+      {/* Trending */}
       {trendingPosts.length > 0 ? (
         <section className="editorial-shell py-10">
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
-              <div style={{ width: 40, height: 1, background: "var(--gold)", marginBottom: "0.5rem", opacity: 0.7 }} />
               <p
-                className="text-xs uppercase tracking-[0.15rem]"
-                style={{ color: "var(--text3)", fontFamily: "var(--font-playfair), Georgia, serif" }}
+                className="text-xs font-semibold uppercase tracking-[0.15rem]"
+                style={{ color: "var(--text3)" }}
               >
                 This Week
               </p>
               <h2 className="serif-title mt-2 text-4xl font-bold">
-                Trending This Week
+                TRENDING THIS WEEK
               </h2>
             </div>
             <AppLink
               href="/browse"
-              className="hidden text-sm font-bold sm:inline-flex"
-              style={{ color: "var(--accent)" }}
+              className="hidden text-sm font-semibold sm:inline-flex"
+              style={{ color: "var(--accent2)" }}
             >
               Browse all
             </AppLink>
@@ -388,7 +405,7 @@ export default function HomePage() {
                 key={post._id}
                 className="relative min-w-0"
               >
-                <span className="absolute left-3 top-3 z-20 rounded-[3px] px-3 py-1 text-sm font-black text-[#faf7f2] shadow-lg" style={{ background: "var(--accent)" }}>
+                <span className="absolute left-3 top-3 z-20 rounded-md px-3 py-1 text-sm font-bold text-white shadow-lg" style={{ background: "var(--accent)" }}>
                   #{index + 1}
                 </span>
                 <PostCard post={post} />
@@ -398,20 +415,31 @@ export default function HomePage() {
         </section>
       ) : null}
 
+      {/* Info cards */}
       <section className="editorial-shell grid gap-5 py-10 md:grid-cols-3">
         {[
-          ["Stories", "Narrative pieces with character, place, and emotion."],
-          ["Blogs", "Useful thoughts, guides, opinions, and personal notes."],
-          ["Community", "Like, comment, share, and follow new writing."],
+          ["STORIES", "Narrative pieces with character, place, and emotion."],
+          ["BLOGS", "Useful thoughts, guides, opinions, and personal notes."],
+          ["COMMUNITY", "Like, comment, share, and follow new writing."],
         ].map(([title, text]) => (
-          <article key={title} className="paper-card rounded-lg p-6">
-            <h2 className="serif-title text-2xl font-bold text-[#25211d]">
+          <article key={title} className="paper-card rounded-xl p-6">
+            <h2 className="serif-title text-2xl font-bold">
               {title}
             </h2>
-            <p className="mt-3 leading-7 text-[#6d6155]">{text}</p>
+            <p className="mt-3 leading-7" style={{ color: "var(--text2)" }}>{text}</p>
           </article>
         ))}
       </section>
+
+      {/* Footer */}
+      <footer className="border-t py-8 text-center" style={{ borderColor: "var(--border)" }}>
+        <div className="flex items-center justify-center gap-6">
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="Facebook">⬤</a>
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="Instagram">⬤</a>
+          <a href="#" className="text-lg transition hover:text-[var(--accent2)]" style={{ color: "var(--text3)" }} aria-label="YouTube">⬤</a>
+        </div>
+        <p className="mt-4 text-xs" style={{ color: "var(--text3)" }}>© 2026 The Hidden Case. All rights reserved.</p>
+      </footer>
     </main>
   );
 }
@@ -421,13 +449,13 @@ function FeaturedPostCard({ post, large = false }) {
 
   return (
     <div
-      className="relative rounded-lg"
+      className="relative rounded-xl"
       style={{
-        border: "1px solid #f59e0b",
-        boxShadow: "0 18px 55px rgba(245, 158, 11, 0.16)",
+        border: "1px solid var(--accent)",
+        boxShadow: "0 18px 55px rgba(192, 57, 43, 0.15)",
       }}
     >
-      <span className="absolute left-3 top-3 z-20 rounded-full bg-[#f59e0b] px-3 py-1 text-xs font-black text-white shadow-lg">
+      <span className="absolute left-3 top-3 z-20 rounded-md bg-[var(--accent)] px-3 py-1 text-xs font-bold text-white shadow-lg">
         ✨ Editor&apos;s Pick
       </span>
       <div className={large ? "[&>article]:min-h-[34rem]" : "[&>article]:min-h-[18rem] [&_img]:h-32"}>

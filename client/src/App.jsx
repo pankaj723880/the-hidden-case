@@ -29,10 +29,10 @@ const MessagesPage = lazy(routeLoaders.messages);
 function NotFoundPage() {
   return (
     <main className="editorial-shell py-12">
-      <h1 className="serif-title text-5xl font-bold text-[#25211d]">
-        Page not found
+      <h1 className="serif-title text-5xl font-bold" style={{ color: "var(--ink)" }}>
+        PAGE NOT FOUND
       </h1>
-      <p className="mt-3 text-[#6d6155]">The requested page does not exist.</p>
+      <p className="mt-3" style={{ color: "var(--text2)" }}>The requested page does not exist.</p>
     </main>
   );
 }
@@ -96,7 +96,7 @@ function AppContent() {
         <Suspense
           fallback={
             isMessagesPage ? (
-              <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] w-full overflow-hidden px-4 py-6 text-[#6d6155] sm:px-6 lg:top-[5rem] lg:px-8">
+              <main className="fixed bottom-0 left-0 right-0 top-[7.5rem] w-full overflow-hidden px-4 py-6 sm:px-6 lg:top-[5rem] lg:px-8" style={{ color: "var(--text2)" }}>
                 Loading...
               </main>
             ) : (

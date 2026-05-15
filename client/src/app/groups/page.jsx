@@ -59,22 +59,22 @@ export default function GroupsPage() {
 
   return (
     <main className="editorial-shell py-12">
-      <header className="border-b border-[#ded2c1] pb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
+      <header className="border-b pb-8" style={{ borderColor: "var(--border)" }}>
+        <p className="text-xs font-semibold uppercase tracking-[0.26em]" style={{ color: "var(--accent2)" }}>
           Writing circles
         </p>
-        <h1 className="serif-title mt-2 text-5xl font-bold text-[#25211d]">
-          Groups
+        <h1 className="serif-title mt-2 text-5xl font-bold">
+          GROUPS
         </h1>
-        <p className="mt-3 max-w-2xl text-lg leading-8 text-[#6d6155]">
+        <p className="mt-3 max-w-2xl text-lg leading-8" style={{ color: "var(--text2)" }}>
           Create clubs, join writing circles, and publish stories to a shared
           community space.
         </p>
       </header>
 
-      <section className="paper-card mt-8 rounded-lg p-6">
-        <h2 className="serif-title text-3xl font-bold text-[#25211d]">
-          Create a Group
+      <section className="paper-card mt-8 rounded-xl p-6">
+        <h2 className="serif-title text-3xl font-bold">
+          CREATE A GROUP
         </h2>
         <form onSubmit={createGroup} className="mt-5 grid gap-3 md:grid-cols-[1fr_1.4fr_auto]">
           <input
@@ -97,7 +97,7 @@ export default function GroupsPage() {
             className="field"
             placeholder="Description"
           />
-          <label className="flex items-center gap-2 text-sm font-bold text-[#352a20]">
+          <label className="flex items-center gap-2 text-sm font-semibold" style={{ color: "var(--text)" }}>
             <input
               type="checkbox"
               checked={form.isPrivate}
@@ -116,23 +116,23 @@ export default function GroupsPage() {
         </form>
       </section>
 
-      {error ? <p className="mt-6 text-sm font-semibold text-[#9f3d2e]">{error}</p> : null}
+      {error ? <p className="mt-6 text-sm font-semibold" style={{ color: "var(--accent2)" }}>{error}</p> : null}
 
       <section className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {groups.map((group) => (
-          <article key={group._id} className="paper-card rounded-lg p-5">
+          <article key={group._id} className="paper-card rounded-xl p-5">
             <div className="flex items-start justify-between gap-3">
-              <span className="rounded-full bg-[#ead9c7] px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#8f5f35]">
+              <span className="rounded-md px-3 py-1 text-xs font-bold uppercase tracking-[0.16em]" style={{ backgroundColor: "rgba(192,57,43,0.15)", color: "var(--accent2)" }}>
                 {group.isPrivate ? "Private" : "Public"}
               </span>
-              <span className="text-xs font-bold text-[#8b7f72]">
+              <span className="text-xs font-semibold" style={{ color: "var(--text3)" }}>
                 {group.memberCount ?? 0} members
               </span>
             </div>
-            <h2 className="serif-title mt-4 text-2xl font-bold text-[#25211d]">
+            <h2 className="serif-title mt-4 text-2xl font-bold">
               {group.name}
             </h2>
-            <p className="mt-3 line-clamp-3 text-sm leading-7 text-[#6d6155]">
+            <p className="mt-3 line-clamp-3 text-sm leading-7" style={{ color: "var(--text2)" }}>
               {group.description || "No description yet."}
             </p>
             <div className="mt-5 flex flex-wrap gap-2">

@@ -19,9 +19,9 @@ export function Navbar() {
   const linkClass = (href) => {
     const isActive = pathname === href || pathname.startsWith(`${href}/`);
     return [
-      "nav-compact-action flex h-9 min-w-9 items-center justify-center px-1 py-2 text-[0.9rem] font-medium tracking-[0.05rem] transition sm:h-10 sm:min-w-10 sm:px-2",
-      "font-[var(--font-garamond)] underline-offset-4 hover:underline",
-      isActive ? "text-[var(--accent)]" : "text-[var(--text2)]",
+      "nav-compact-action flex h-9 min-w-9 items-center justify-center px-1 py-2 text-[0.85rem] font-medium tracking-[0.03rem] transition sm:h-10 sm:min-w-10 sm:px-2",
+      "underline-offset-4 hover:no-underline",
+      isActive ? "text-[var(--accent2)]" : "text-[var(--text2)] hover:text-[var(--text)]",
     ].join(" ");
   };
   const navLabel = (icon, label) => (
@@ -33,8 +33,8 @@ export function Navbar() {
   const drawerLinkClass = (href) => {
     const isActive = pathname === href || pathname.startsWith(`${href}/`);
     return [
-      "block rounded-[3px] border px-4 py-3 text-sm font-bold tracking-[0.05rem] transition hover:no-underline",
-      isActive ? "border-[var(--accent)] bg-[var(--bg3)] text-[var(--accent)]" : "border-[var(--border)] text-[var(--text2)] hover:bg-[var(--bg3)]",
+      "block rounded-md border px-4 py-3 text-sm font-semibold tracking-[0.03rem] transition hover:no-underline",
+      isActive ? "border-[var(--accent)] bg-[var(--bg4)] text-[var(--accent2)]" : "border-[var(--border)] text-[var(--text2)] hover:bg-[var(--bg3)] hover:text-[var(--text)]",
     ].join(" ");
   };
 
@@ -43,15 +43,16 @@ export function Navbar() {
       className="fixed left-0 right-0 top-0 z-50 border-b"
       style={{
         borderColor: "var(--border)",
-        backgroundColor: "var(--bg2)",
-        boxShadow: "0 1px 8px rgba(44, 36, 22, 0.08)",
+        backgroundColor: "rgba(13, 13, 13, 0.92)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
       }}
     >
       <div className="mx-auto grid min-h-16 w-full max-w-[1280px] grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-3 py-2 sm:px-4 lg:flex lg:flex-nowrap lg:gap-3">
         <button
           type="button"
           onClick={() => setIsMenuOpen(true)}
-          className="nav-compact-action col-start-1 row-start-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-[3px] border text-lg transition hover:bg-[var(--bg3)] sm:h-10 sm:w-10 sm:text-xl lg:order-1"
+          className="nav-compact-action col-start-1 row-start-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border text-lg transition hover:bg-[var(--bg3)] sm:h-10 sm:w-10 sm:text-xl lg:order-1"
           style={{ borderColor: "var(--border)", color: "var(--text2)" }}
           aria-label="Open menu"
         >
@@ -63,37 +64,24 @@ export function Navbar() {
           className="col-span-2 row-start-1 flex w-full min-w-0 shrink-0 items-center justify-center gap-3 hover:no-underline lg:order-2 lg:w-auto lg:justify-start lg:max-w-[18rem]"
         >
           <span
-            aria-hidden="true"
-            className="h-1.5 w-1.5 rounded-full"
-            style={{ backgroundColor: "var(--gold)" }}
-          />
-          <span
-            className="flex h-9 w-9 items-center justify-center rounded-[3px] text-xl font-bold text-[#faf7f2]"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-xl font-bold text-white"
             style={{
               backgroundColor: "var(--accent)",
-              fontFamily: "var(--font-playfair), Georgia, serif",
+              fontFamily: "var(--font-bebas), sans-serif",
             }}
           >
             H
           </span>
           <span className="min-w-0 leading-none">
             <span
-              className="block truncate text-[1.25rem] font-semibold italic sm:text-[1.4rem]"
+              className="block truncate text-[1.3rem] font-bold tracking-wider sm:text-[1.5rem]"
               style={{
                 color: "var(--ink)",
-                fontFamily: "var(--font-playfair), Georgia, serif",
+                fontFamily: "var(--font-bebas), sans-serif",
+                letterSpacing: "0.08em",
               }}
             >
               The Hidden Case
-            </span>
-            <span
-              className="block text-[0.65rem] uppercase tracking-[0.3rem]"
-              style={{
-                color: "var(--text3)",
-                fontFamily: "var(--font-garamond), Georgia, serif",
-              }}
-            >
-              Untold Stories
             </span>
           </span>
         </AppLink>
@@ -140,7 +128,7 @@ export function Navbar() {
           {isLoading ? (
             <div className="flex h-9 min-w-[5.5rem] items-center justify-end sm:h-10" aria-label="Checking session">
               <span
-                className="block h-8 w-20 rounded-[3px]"
+                className="block h-8 w-20 rounded-md"
                 style={{ backgroundColor: "var(--bg3)" }}
               />
             </div>
@@ -163,11 +151,11 @@ export function Navbar() {
                       />
                     ) : (
                       <span
-                        className="flex h-[34px] w-[34px] items-center justify-center rounded-full border-2 text-sm font-semibold text-[#faf7f2]"
+                        className="flex h-[34px] w-[34px] items-center justify-center rounded-full border-2 text-sm font-semibold text-white"
                         style={{
                           backgroundColor: "var(--accent)",
                           borderColor: "var(--border2)",
-                          fontFamily: "var(--font-playfair), Georgia, serif",
+                          fontFamily: "var(--font-bebas), sans-serif",
                         }}
                       >
                         {(user?.name ?? "U").slice(0, 1).toUpperCase()}
@@ -180,7 +168,6 @@ export function Navbar() {
                 type="button"
                 onClick={handleLogout}
                 className="nav-compact-action secondary-btn h-9 shrink-0 px-2 py-1.5 text-sm sm:h-10 sm:px-4"
-                style={{ color: "var(--text2)" }}
                 aria-label="Logout"
               >
                 <span className="sm:hidden" aria-hidden="true">↪</span>
@@ -199,11 +186,11 @@ export function Navbar() {
               </AppLink>
               <AppLink
                 href="/register"
-                className="nav-compact-action primary-btn flex h-9 shrink-0 items-center justify-center px-2 py-1.5 text-sm hover:no-underline sm:h-10 sm:px-[18px]"
+                className="nav-compact-action primary-btn flex h-9 shrink-0 items-center justify-center gap-1.5 px-2 py-1.5 text-sm hover:no-underline sm:h-10 sm:px-[18px]"
                 aria-label="Sign Up"
               >
                 <span className="sm:hidden" aria-hidden="true">＋</span>
-                <span className="hidden sm:inline">Sign Up</span>
+                <span className="hidden sm:inline">Sign Up ✎</span>
               </AppLink>
             </>
           )}
@@ -214,18 +201,18 @@ export function Navbar() {
         <div className="fixed inset-0 z-[200]">
           <button
             type="button"
-            className="absolute inset-0 bg-[rgba(44,36,22,0.45)]"
+            className="absolute inset-0 bg-[rgba(0,0,0,0.65)]"
             onClick={() => setIsMenuOpen(false)}
             aria-label="Close menu"
           />
           <aside
-            className="absolute left-0 top-0 h-full w-[min(20rem,86vw)] border-r p-5 shadow-[0_18px_50px_rgba(44,36,22,0.2)]"
+            className="absolute left-0 top-0 h-full w-[min(20rem,86vw)] border-r p-5 shadow-[0_18px_50px_rgba(0,0,0,0.5)]"
             style={{ backgroundColor: "var(--bg2)", borderColor: "var(--border)" }}
           >
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="serif-title text-xl font-bold italic" style={{ color: "var(--ink)" }}>
-                  Menu
+                <p className="text-xl font-bold tracking-wider" style={{ color: "var(--ink)", fontFamily: "var(--font-bebas), sans-serif" }}>
+                  MENU
                 </p>
                 <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text3)" }}>
                   The Hidden Case
@@ -234,7 +221,7 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsMenuOpen(false)}
-                className="flex h-9 w-9 items-center justify-center rounded-[3px] border text-lg"
+                className="flex h-9 w-9 items-center justify-center rounded-md border text-lg"
                 style={{ borderColor: "var(--border)", color: "var(--text2)" }}
                 aria-label="Close menu"
               >

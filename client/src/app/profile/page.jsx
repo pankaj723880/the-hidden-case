@@ -311,31 +311,31 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return <main className="editorial-shell py-12 text-[#6d6155]">Loading profile...</main>;
+    return <main className="editorial-shell py-12" style={{ color: "var(--text2)" }}>Loading profile...</main>;
   }
 
   return (
     <main className="editorial-shell py-12">
-      <header className="mb-9 border-b border-[#ded2c1] pb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#8f5f35]">
+      <header className="mb-9 border-b pb-8" style={{ borderColor: "var(--border)" }}>
+        <p className="text-xs font-semibold uppercase tracking-[0.26em]" style={{ color: "var(--accent2)" }}>
           Your desk
         </p>
-        <h1 className="serif-title mt-2 text-5xl font-bold text-[#25211d]">
-          Profile
+        <h1 className="serif-title mt-2 text-5xl font-bold">
+          PROFILE
         </h1>
       </header>
 
       <section className="grid gap-8 lg:grid-cols-[0.85fr_1.7fr]">
-        <aside className="paper-card h-fit rounded-lg p-7">
+        <aside className="paper-card h-fit rounded-xl p-7">
           <div className="flex flex-col items-center text-center">
             {displayUser?.avatar ? (
               <img
                 src={getMediaUrl(displayUser.avatar)}
                 alt=""
-                className="h-32 w-32 rounded-full border border-[#d8cab8] object-cover"
+                className="h-32 w-32 rounded-full border border-[var(--border)] object-cover"
               />
             ) : (
-              <div className="flex h-32 w-32 items-center justify-center rounded-full bg-[#ead9c7] font-serif text-4xl font-bold text-[#8f5f35]">
+              <div className="flex h-32 w-32 items-center justify-center rounded-full font-serif text-4xl font-bold" style={{ backgroundColor: "var(--bg4)", color: "var(--accent2)" }}>
                 {(displayUser?.name || "User")
                   .split(" ")
                   .map((part) => part[0])
@@ -344,7 +344,7 @@ export default function ProfilePage() {
                   .toUpperCase()}
               </div>
             )}
-            <h2 className="serif-title mt-5 text-3xl font-bold text-[#25211d]">
+            <h2 className="serif-title mt-5 text-3xl font-bold">
               {displayUser?.name || "Unknown User"}
             </h2>
             <div className="mt-3 w-full">
@@ -360,27 +360,27 @@ export default function ProfilePage() {
                 longestStreak={displayUser?.longestStreak ?? 0}
               />
             </div>
-            <p className="mt-1 text-sm text-[#8b7f72]">
+            <p className="mt-1 text-sm" style={{ color: "var(--text3)" }}>
               {displayUser?.email || "No email available"}
             </p>
             {displayUser?.bio ? (
-              <p className="mt-5 leading-7 text-[#6d6155]">{displayUser.bio}</p>
+              <p className="mt-5 leading-7" style={{ color: "var(--text2)" }}>{displayUser.bio}</p>
             ) : null}
           </div>
 
           <div className="mt-6 grid grid-cols-2 gap-3 text-center">
-            <div className="rounded-md bg-[#ead9c7]/55 p-4">
-              <p className="text-2xl font-bold text-[#25211d]">{posts.length}</p>
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+            <div className="rounded-md p-4" style={{ backgroundColor: "var(--bg3)" }}>
+              <p className="text-2xl font-bold" style={{ color: "var(--ink)" }}>{posts.length}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: "var(--text3)" }}>
                 Posts
               </p>
             </div>
             {displayUser?.role === "admin" ? (
-              <div className="rounded-md bg-[#ead9c7]/55 p-4">
-                <p className="text-2xl font-bold capitalize text-[#25211d]">
+              <div className="rounded-md p-4" style={{ backgroundColor: "var(--bg3)" }}>
+                <p className="text-2xl font-bold capitalize" style={{ color: "var(--ink)" }}>
                   Admin
                 </p>
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+                <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: "var(--text3)" }}>
                   Role
                 </p>
               </div>
@@ -388,38 +388,40 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => setConnectionsType("followers")}
-              className="rounded-md bg-[#ead9c7]/55 p-4 transition hover:shadow-sm"
+              className="rounded-md p-4 transition hover:shadow-sm"
+              style={{ backgroundColor: "var(--bg3)" }}
             >
-              <p className="text-2xl font-bold text-[#25211d]">
+              <p className="text-2xl font-bold" style={{ color: "var(--ink)" }}>
                 {(displayUser?.followers ?? []).length}
               </p>
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+              <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: "var(--text3)" }}>
                 Followers
               </p>
             </button>
             <button
               type="button"
               onClick={() => setConnectionsType("following")}
-              className="rounded-md bg-[#ead9c7]/55 p-4 transition hover:shadow-sm"
+              className="rounded-md p-4 transition hover:shadow-sm"
+              style={{ backgroundColor: "var(--bg3)" }}
             >
-              <p className="text-2xl font-bold text-[#25211d]">
+              <p className="text-2xl font-bold" style={{ color: "var(--ink)" }}>
                 {(displayUser?.following ?? []).length}
               </p>
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+              <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: "var(--text3)" }}>
                 Following
               </p>
             </button>
           </div>
 
-          {message ? <p className="mt-5 text-sm font-semibold text-[#5f7263]">{message}</p> : null}
+          {message ? <p className="mt-5 text-sm font-semibold" style={{ color: "var(--green)" }}>{message}</p> : null}
 
-          <div className="mt-7 rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4">
+          <div className="mt-7 rounded-lg border p-4" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}>
             <label className="flex items-center justify-between gap-4">
               <span>
-                <span className="block text-sm font-bold text-[#352a20]">
+                <span className="block text-sm font-semibold" style={{ color: "var(--text)" }}>
                   Receive email notifications
                 </span>
-                <span className="mt-1 block text-xs text-[#8b7f72]">
+                <span className="mt-1 block text-xs" style={{ color: "var(--text3)" }}>
                   Comments, follows, and submission updates.
                 </span>
               </span>
@@ -430,12 +432,12 @@ export default function ProfilePage() {
                 onChange={handleEmailNotificationsChange}
                 className="peer sr-only"
               />
-              <span className="relative h-6 w-11 shrink-0 rounded-full bg-[#d8cab8] transition after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition peer-checked:bg-[var(--accent)] peer-checked:after:translate-x-5 peer-disabled:opacity-60" />
+              <span className="relative h-6 w-11 shrink-0 rounded-full transition after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition peer-checked:bg-[var(--accent)] peer-checked:after:translate-x-5 peer-disabled:opacity-60" style={{ backgroundColor: "var(--bg4)" }} />
             </label>
           </div>
 
-          <div className="mt-5 rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4">
-            <h3 className="text-sm font-bold text-[#352a20]">Followed Tags</h3>
+          <div className="mt-5 rounded-lg border p-4" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}>
+            <h3 className="text-sm font-semibold" style={{ color: "var(--text)" }}>Followed Tags</h3>
             {followedTags.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-2">
                 {followedTags.map((tag) => (
@@ -443,7 +445,8 @@ export default function ProfilePage() {
                     key={tag}
                     type="button"
                     onClick={() => handleUnfollowTag(tag)}
-                    className="rounded-full border border-[#d8cab8] bg-[#ead9c7]/70 px-3 py-1 text-xs font-bold text-[#5f4631] transition hover:border-[#9f3d2e] hover:text-[#9f3d2e]"
+                    className="rounded-full border px-3 py-1 text-xs font-bold transition hover:border-[var(--accent)] hover:text-[var(--accent2)]"
+                    style={{ borderColor: "var(--border)", color: "var(--text2)" }}
                     title={`Unfollow #${tag}`}
                   >
                     #{tag} x
@@ -451,15 +454,15 @@ export default function ProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="mt-2 text-xs font-semibold text-[#8b7f72]">
+              <p className="mt-2 text-xs font-semibold" style={{ color: "var(--text3)" }}>
                 Follow tags from tag pages to shape your home feed.
               </p>
             )}
           </div>
 
-          <div className="mt-5 rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-4">
-            <h3 className="text-sm font-bold text-[#352a20]">How to earn XP</h3>
-            <div className="mt-3 space-y-1 text-xs font-semibold text-[#8b7f72]">
+          <div className="mt-5 rounded-lg border p-4" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}>
+            <h3 className="text-sm font-semibold" style={{ color: "var(--text)" }}>How to earn XP</h3>
+            <div className="mt-3 space-y-1 text-xs font-semibold" style={{ color: "var(--text3)" }}>
               {Object.entries(XP_ACTIONS).map(([action, points]) => (
                 <p key={action}>
                   {action.replaceAll("_", " ")}: +{points} XP
@@ -471,7 +474,7 @@ export default function ProfilePage() {
           {isEditing ? (
             <form onSubmit={handleSaveProfile} className="mt-7 space-y-4">
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">Name</span>
+                <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Name</span>
                 <input
                   value={formName}
                   onChange={(event) => setFormName(event.target.value)}
@@ -480,7 +483,7 @@ export default function ProfilePage() {
                 />
               </label>
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">
+                <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
                   Profile picture
                 </span>
                 <input
@@ -489,16 +492,16 @@ export default function ProfilePage() {
                   onChange={(event) =>
                     setAvatarFile(event.target.files?.[0] ?? null)
                   }
-                  className="field mt-2 file:mr-4 file:rounded-md file:border-0 file:bg-[#2f4638] file:px-4 file:py-2 file:font-bold file:text-[#fffaf2]"
+                  className="field mt-2 file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:font-bold file:text-white" style={{ '--tw-file-bg': 'var(--accent)' }}
                 />
                 {avatarFile ? (
-                  <p className="mt-2 text-xs text-[#8b7f72]">
+                  <p className="mt-2 text-xs" style={{ color: "var(--text3)" }}>
                     {avatarFile.name}
                   </p>
                 ) : null}
               </label>
               <label className="block">
-                <span className="text-sm font-bold text-[#352a20]">Bio</span>
+                <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>Bio</span>
                 <textarea
                   value={formBio}
                   onChange={(event) => setFormBio(event.target.value)}
@@ -530,10 +533,10 @@ export default function ProfilePage() {
           )}
         </aside>
 
-        <section className="paper-card rounded-lg">
-          <div className="border-b border-[#ded2c1] px-6 py-5">
-            <h2 className="serif-title text-3xl font-bold text-[#25211d]">
-              Your library
+        <section className="paper-card rounded-xl">
+          <div className="border-b px-6 py-5" style={{ borderColor: "var(--border)" }}>
+            <h2 className="serif-title text-3xl font-bold">
+              YOUR LIBRARY
             </h2>
             <div className="mt-5 flex flex-wrap gap-2">
               {[
@@ -564,25 +567,24 @@ export default function ProfilePage() {
             </div>
           </div>
           <div className="space-y-4 p-6">
-            {error ? <p className="text-sm font-semibold text-[#9f3d2e]">{error}</p> : null}
+            {error ? <p className="text-sm font-semibold" style={{ color: "var(--accent2)" }}>{error}</p> : null}
 
             {activeTab === "submissions" ? (
               posts.map((post) => (
                 <div
                   key={post._id}
-                  className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5"
-                >
+                  className="rounded-lg border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}>
                   <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                     <div>
-                      <h3 className="serif-title text-2xl font-bold text-[#25211d]">
+                      <h3 className="serif-title text-2xl font-bold" style={{ color: "var(--ink)" }}>
                         {post.title}
                       </h3>
-                      <p className="mt-1 text-sm capitalize text-[#8b7f72]">
+                      <p className="mt-1 text-sm capitalize" style={{ color: "var(--text3)" }}>
                         {post.type}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                      <span className="inline-flex h-8 min-w-24 items-center justify-center rounded-full bg-[#ead9c7] px-4 text-xs font-bold uppercase tracking-[0.12em] text-[#8f5f35]">
+                      <span className="inline-flex h-8 min-w-24 items-center justify-center rounded-full bg-[var(--bg4)] px-4 text-xs font-bold" style={{ color: "var(--accent2)" }}>
                         {post.status}
                       </span>
                       <AppLink
@@ -603,11 +605,11 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   {post.adminReviewComment ? (
-                    <div className="mt-4 rounded-md border border-[#d8cab8] bg-[#f5f0e8] p-4">
-                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8b7f72]">
+                    <div className="mt-4 rounded-md border border-[var(--border)] bg-[var(--bg4)] p-4">
+                      <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: "var(--text3)" }}>
                         Private editor note
                       </p>
-                      <p className="mt-2 leading-7 text-[#5f4631]">
+                      <p className="mt-2 leading-7" style={{ color: "var(--text2)" }}>
                         {post.adminReviewComment}
                       </p>
                     </div>
@@ -626,7 +628,7 @@ export default function ProfilePage() {
 
             {activeTab === "reading-list" ? (
               isLoadingBookmarks ? (
-                <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+                <p className="rounded-lg border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)" }}>
                   Loading reading list...
                 </p>
               ) : (
@@ -640,20 +642,20 @@ export default function ProfilePage() {
 
             {activeTab === "drafts" ? (
               isLoadingDrafts ? (
-                <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+                <p className="rounded-lg border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)" }}>
                   Loading drafts...
                 </p>
               ) : (
                 drafts.map((draft) => (
                   <div
                     key={draft._id}
-                    className="flex flex-col justify-between gap-4 rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 lg:flex-row lg:items-center"
+                    className="flex flex-col justify-between gap-4 rounded-lg border p-5 lg:flex-row lg:items-center" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}
                   >
                     <div>
-                      <h3 className="serif-title text-2xl font-bold text-[#25211d]">
+                      <h3 className="serif-title text-2xl font-bold" style={{ color: "var(--ink)" }}>
                         {draft.title}
                       </h3>
-                      <p className="mt-1 text-sm text-[#8b7f72]">
+                      <p className="mt-1 text-sm" style={{ color: "var(--text3)" }}>
                         Last saved{" "}
                         {draft.updatedAt
                           ? new Date(draft.updatedAt).toLocaleString()
@@ -670,7 +672,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => handleDeleteDraft(draft._id)}
-                        className="rounded-md border border-[#9f3d2e]/35 px-4 py-2.5 text-sm font-bold text-[#9f3d2e] transition hover:bg-[#9f3d2e]/10"
+                        className="rounded-md border border-[var(--accent2)]/35 px-4 py-2.5 text-sm font-bold text-[var(--accent2)] transition hover:bg-[var(--accent2)]/10"
                       >
                         Delete
                       </button>
@@ -686,19 +688,19 @@ export default function ProfilePage() {
 
             {activeTab === "questions" ? (
               isLoadingQuestions ? (
-                <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+                <p className="rounded-lg border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)" }}>
                   Loading questions...
                 </p>
               ) : (
                 questions.map((item) => (
                   <div
                     key={item._id}
-                    className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5"
+                    className="rounded-lg border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}
                   >
-                    <blockquote className="border-l-4 border-[var(--accent)] pl-4 text-lg font-semibold leading-8 text-[#352a20]">
+                    <blockquote className="border-l-4 border-[var(--accent)] pl-4 text-lg font-semibold leading-8" style={{ color: "var(--text)" }}>
                       {item.question}
                     </blockquote>
-                    <p className="mt-3 text-sm font-semibold text-[#8b7f72]">
+                    <p className="mt-3 text-sm font-semibold" style={{ color: "var(--text3)" }}>
                       Asked by {item.askedBy?.name ?? "Anonymous"}
                     </p>
                     <button
@@ -719,7 +721,7 @@ export default function ProfilePage() {
                           placeholder="Write your answer..."
                         />
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <label className="flex items-center gap-2 text-sm font-bold text-[#352a20]">
+                          <label className="flex items-center gap-2 text-sm font-semibold" style={{ color: "var(--text2)" }}>
                             <input
                               type="checkbox"
                               checked={answerIsPublic}
@@ -729,7 +731,7 @@ export default function ProfilePage() {
                             />
                             Make public
                           </label>
-                          <span className="text-xs font-semibold text-[#8b7f72]">
+                          <span className="text-xs font-semibold" style={{ color: "var(--text3)" }}>
                             {answerText.length}/1000
                           </span>
                           <button
@@ -749,25 +751,24 @@ export default function ProfilePage() {
 
             {activeTab === "continuations" ? (
               isLoadingContinuations ? (
-                <p className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+                <p className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                   Loading continuations...
                 </p>
               ) : (
                 continuationInbox.map((item) => (
                   <div
                     key={item._id}
-                    className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5"
-                  >
-                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#8f5f35]">
+                    className="rounded-lg border p-5" style={{ borderColor: "var(--border)", backgroundColor: "var(--bg3)" }}>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em]" style={{ color: "var(--accent2)" }}>
                       For {item.originalPost?.title ?? "your story"}
                     </p>
-                    <h3 className="serif-title mt-2 text-2xl font-bold text-[#25211d]">
+                    <h3 className="serif-title mt-2 text-2xl font-bold ">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-sm font-semibold text-[#8b7f72]">
+                    <p className="mt-1 text-sm font-semibold" style={{ color: "var(--text3)" }}>
                       By {item.author?.name ?? "Unknown"}
                     </p>
-                    <p className="mt-4 leading-7 text-[#6d6155]">
+                    <p className="mt-4 leading-7" style={{ color: "var(--text2)" }}>
                       {item.excerpt}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
@@ -792,16 +793,16 @@ export default function ProfilePage() {
             ) : null}
 
             {activeTab === "submissions" && posts.length === 0 && !error ? (
-              <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+              <div className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                 No submissions yet.{" "}
-                <AppLink href="/write" className="font-bold text-[#2f4638]">
+                <AppLink href="/write" className="font-semibold" style={{ color: "var(--accent2)" }}>
                   Write your first piece.
                 </AppLink>
               </div>
             ) : null}
 
             {activeTab === "published" && approvedPosts.length === 0 && !error ? (
-              <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+              <div className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                 No approved posts yet.
               </div>
             ) : null}
@@ -810,7 +811,7 @@ export default function ProfilePage() {
             !isLoadingBookmarks &&
             bookmarks.length === 0 &&
             !error ? (
-              <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+              <div className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                 Your reading list is empty. Bookmark stories to read later.
               </div>
             ) : null}
@@ -819,9 +820,9 @@ export default function ProfilePage() {
             !isLoadingDrafts &&
             drafts.length === 0 &&
             !error ? (
-              <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+              <div className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                 No drafts yet.{" "}
-                <AppLink href="/write" className="font-bold text-[#2f4638]">
+                <AppLink href="/write" className="font-semibold" style={{ color: "var(--accent2)" }}>
                   Start writing!
                 </AppLink>
               </div>
@@ -831,7 +832,7 @@ export default function ProfilePage() {
             !isLoadingQuestions &&
             questions.length === 0 &&
             !error ? (
-              <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+              <div className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                 No unanswered questions.
               </div>
             ) : null}
@@ -840,7 +841,7 @@ export default function ProfilePage() {
             !isLoadingContinuations &&
             continuationInbox.length === 0 &&
             !error ? (
-              <div className="rounded-lg border border-[#ded2c1] bg-[#fffaf2]/70 p-5 text-[#6d6155]">
+              <div className="rounded-lg border p-5" style={{borderColor: "var(--border)", backgroundColor: "var(--bg3)", color: "var(--text2)"}}>
                 No pending continuations.
               </div>
             ) : null}
@@ -854,7 +855,7 @@ export default function ProfilePage() {
         userId={displayUser?.id ?? displayUser?._id}
       />
       {critiquePostId ? (
-        <div className="fixed inset-0 z-[220] flex items-center justify-center bg-[rgba(44,36,22,0.6)] px-4">
+        <div className="fixed inset-0 z-[220] flex items-center justify-center px-4" style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
           <div className="max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-[6px] border bg-[var(--bg2)] p-6 shadow-[0_20px_60px_rgba(44,36,22,0.25)]" style={{ borderColor: "var(--border)" }}>
             <div className="mb-5 flex justify-end">
               <button
